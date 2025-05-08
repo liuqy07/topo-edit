@@ -351,6 +351,7 @@ export default (G6) => {
      */
     _nodeOnDragEnd(e, group) {
       const { graph } = this;
+
       const model = e.item.getModel();
       const shadowNode = group.getFirst().cfg.xShapeNode
         ? group.$getItem("shadow-node")
@@ -363,10 +364,15 @@ export default (G6) => {
           x,
           y,
         };
-
+        // model.x =x
+        // model.y = y
         shadowNode.remove();
 
         if (!this._dragNodeModeCheck()) {
+          // e.item.attr({
+          //   x: pos.x,
+          //   y: pos.y,
+          // });
           // 如果当前模式中没有使用内置的 drag-node 则让画布更新节点位置
           graph.updateItem(e.item, pos);
         }

@@ -241,4 +241,1049 @@ let imgurl = [
   },
 ];
 
+
+const imglistAll= [
+  {
+      "imgsrc": "olt_1.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_2.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_3.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_4.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_5.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_6.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_7.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_8.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "olt_9.png",
+      "level": "OLT",
+      "remark": "OLT"
+  },
+  {
+      "imgsrc": "dsw_1.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_2.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_3.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_4.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_5.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_6.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_7.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_8.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "dsw_9.png",
+      "level": "CYW-SW",
+      "remark": "DSW"
+  },
+  {
+      "imgsrc": "s_leaf_1.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_2.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_3.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_4.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_5.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_6.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_7.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_8.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "s_leaf_9.png",
+      "level": "SLEAF",
+      "remark": "SLEAF"
+  },
+  {
+      "imgsrc": "spine_1.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_2.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_3.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_4.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_5.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_6.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_7.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_8.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "spine_9.png",
+      "level": "SPINE",
+      "remark": "SPINE"
+  },
+  {
+      "imgsrc": "dcgw_1.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_2.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_3.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_4.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_5.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_6.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_7.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_8.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "dcgw_9.png",
+      "level": "DCGW",
+      "remark": "DCGW"
+  },
+  {
+      "imgsrc": "board_leaf_1.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_2.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_3.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_4.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_5.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_6.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_7.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_8.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "board_leaf_9.png",
+      "level": "BORDERLEAF",
+      "remark": "BORDERLEAF"
+  },
+  {
+      "imgsrc": "cr_1.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_2.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_3.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_4.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_5.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_6.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_7.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_8.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "cr_9.png",
+      "level": "CR",
+      "remark": "CR"
+  },
+  {
+      "imgsrc": "a_leaf_1.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_2.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_3.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_4.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_5.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_6.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_7.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_8.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "a_leaf_9.png",
+      "level": "ALEAF",
+      "remark": "ALEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_1.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_2.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_3.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_4.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_5.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_6.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_7.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_8.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "dc_leaf_9.png",
+      "level": "DCLEAF",
+      "remark": "DCLEAF"
+  },
+  {
+      "imgsrc": "ipran_a_1.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_2.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_3.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_4.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_5.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_6.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_7.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_8.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_a_9.png",
+      "level": "IPRANA",
+      "remark": "IPRANA"
+  },
+  {
+      "imgsrc": "ipran_b_1.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_2.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_3.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_4.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_5.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_6.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_7.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_8.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_b_9.png",
+      "level": "IPRANB",
+      "remark": "IPRANB"
+  },
+  {
+      "imgsrc": "ipran_u_1.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_2.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_3.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_4.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_5.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_6.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_7.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_8.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "ipran_u_9.png",
+      "level": "IPRANU",
+      "remark": "IPRANU"
+  },
+  {
+      "imgsrc": "sw_1.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_2.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_3.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_4.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_5.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_6.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_7.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_8.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "sw_9.png",
+      "level": "SW",
+      "remark": "SW"
+  },
+  {
+      "imgsrc": "ce_1.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_2.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_3.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_4.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_5.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_6.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_7.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_8.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "ce_9.png",
+      "level": "CE",
+      "remark": "CE"
+  },
+  {
+      "imgsrc": "sr_1.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_2.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_3.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_4.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_5.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_6.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_7.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_8.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "sr_9.png",
+      "level": "SR",
+      "remark": "SR"
+  },
+  {
+      "imgsrc": "asbr_1.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_2.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_3.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_4.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_5.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_6.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_7.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_8.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "asbr_9.png",
+      "level": "ASBR",
+      "remark": "ASBR"
+  },
+  {
+      "imgsrc": "bras_1.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_2.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_3.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_4.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_5.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_6.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_7.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_8.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "bras_9.png",
+      "level": "BRAS",
+      "remark": "BRAS"
+  },
+  {
+      "imgsrc": "mse_1.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_2.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_3.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_4.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_5.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_6.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_7.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_8.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "mse_9.png",
+      "level": "MSE",
+      "remark": "MSE"
+  },
+  {
+      "imgsrc": "rr_1.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_2.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_3.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_4.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_5.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_6.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_7.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_8.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "rr_9.png",
+      "level": "RR",
+      "remark": "RR"
+  },
+  {
+      "imgsrc": "pe_1.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_2.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_3.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_4.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_5.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_6.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_7.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_8.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "pe_9.png",
+      "level": "PE",
+      "remark": "PE"
+  },
+  {
+      "imgsrc": "er_1.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_2.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_3.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_4.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_5.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_6.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_7.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_8.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "er_9.png",
+      "level": "ER",
+      "remark": "ER"
+  },
+  {
+      "imgsrc": "p_1.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_2.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_3.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_4.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_5.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_6.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_7.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_8.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "p_9.png",
+      "level": "P",
+      "remark": "P"
+  },
+  {
+      "imgsrc": "cpe_r_1.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_2.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_3.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_4.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_5.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_6.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_7.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_8.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "cpe_r_9.png",
+      "level": "CPE",
+      "remark": "CPE"
+  },
+  {
+      "imgsrc": "computer.png",
+      "level": "COMPUTER",
+      "remark": "COMPUTER"
+  }
+]
+
+export { imglistAll };
 export { imgurl };

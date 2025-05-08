@@ -259,6 +259,7 @@ export default (G6) => {
         // 元素分组
         // 合并外部样式和默认样式
         // 获取节点样式
+        
         const attrs = this.getShapeStyle(cfg, group);
 
         console.log("attrs", attrs);
@@ -292,6 +293,7 @@ export default (G6) => {
           let { width, height } = attrs;
         
           let imgShape=  group.addShape("image", {
+            className: `${this.shapeType}-image`,
             attrs: {
               x: -width / 2,
               y: -height / 2,
@@ -315,54 +317,77 @@ export default (G6) => {
       /* 更新节点，包含文本 */
       update(cfg, node) {
         const model = node.get("model");
-        const { attrs } = node.get("keyShape");
+        let  { attrs } =  node.get("keyShape");
         const group = node.get("group");
         const text = group.$getItem("node-text");
         const item = group.get("children")[0];
-
+        group.anchorShapes.forEach((a) => a.remove());
+        const imgShape = group.$getItem(`${this.shapeType}-image`);
+        attrs.width = Number(cfg.width)
+        attrs.height = Number(cfg.height)
+        attrs.style.width = Number(cfg.width)
+        attrs.style.height = Number(cfg.height)
+        let { height } = cfg;
+        let position_y = 0;
+        position_y = height / 2 + 12;
+        
+        if (imgShape) {
+          let img = this.drawImg(cfg);
+          imgShape.attr({
+            img: img,
+            x: -attrs.width/2,
+            y: -attrs.height/2,
+            width: attrs.width,
+            height: attrs.height,
+          });
+        }
         // 更新文本内容
         text &&
           text.attr({
+            y: position_y, 
             text: model.label,
             ...model.labelCfg.style,
           });
         // 更新节点属性
-        if (attrs.type === "diamond-node") {
-          const path = this.getPath({
-            style: {
-              size: model.size,
-            },
-          });
+        // if (attrs.type === "diamond-node") {
+        //   const path = this.getPath({
+        //     style: {
+        //       size: model.size,
+        //     },
+        //   });
 
+        //   item.attr({
+        //     ...attrs,
+        //     ...model.style,
+        //     path,
+        //     width: model.size[0],
+        //     height: model.size[1],
+        //   });
+        // } else {
+          // const logoIcon = group
+          //   .get("children")
+          //   .find((x) => x.cfg.className === `${attrs.type}-logoIcon`);
+
+          // if (logoIcon) {
+          //   logoIcon.attr({ ...model.logoIcon });
+          // }
+
+          // const stateIcon = group
+          //   .get("children")
+          //   .find((x) => x.cfg.className === `${attrs.type}-stateIcon`);
+
+          // if (stateIcon) {
+          //   stateIcon.attr({ ...model.stateIcon });
+          // }
+         
           item.attr({
-            ...attrs,
-            ...model.style,
-            path,
-            width: model.size[0],
-            height: model.size[1],
+            x: -attrs.width/2,
+            y: -attrs.height/2,
+            width: attrs.width,
+            height: attrs.height
           });
-        } else {
-          const logoIcon = group
-            .get("children")
-            .find((x) => x.cfg.className === `${attrs.type}-logoIcon`);
-
-          if (logoIcon) {
-            logoIcon.attr({ ...model.logoIcon });
-          }
-
-          const stateIcon = group
-            .get("children")
-            .find((x) => x.cfg.className === `${attrs.type}-stateIcon`);
-
-          if (stateIcon) {
-            stateIcon.attr({ ...model.stateIcon });
-          }
-
-          item.attr({
-            ...attrs,
-            ...model.style,
-          });
-        }
+        
+        // }
       },
       /* 设置节点的状态，主要是交互状态，业务状态请在 draw 方法中实现 */
       setState(name, value, item) {

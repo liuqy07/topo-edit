@@ -14,7 +14,7 @@
             draggable="true"
             data-label=""
             :data-img="item.imgsrc"
-            data-shape="img-node"
+            :data-shape="item.type"
             :data-width="item.width"
             :data-height="item.height"
             :data-level="item.level"
@@ -28,11 +28,9 @@
             >
               <span>{{ item.level.toUpperCase() }}</span>
             </el-tooltip>
-
             <span>{{ item.title }}</span>
           </div>
           <div>
-            <!-- <svg-icon slot="prefix" icon-class="addIcon" /> -->
             <i class="el-icon-plus svg-icon" @click="openAddicon"></i>
           </div>
         </div>
@@ -58,7 +56,6 @@
               />
             </svg>
           </div>
-
           <div
             class="node"
             draggable="true"

@@ -45,7 +45,7 @@ function getStyle(options, cfg) {
 export default (G6) => {
   // 从 base-node 中扩展方形节点
   G6.registerNode(
-    "rect-node",
+    "img-node",
     {
       shapeType: "rect",
       // 当前节点的样式集合

@@ -3,60 +3,76 @@
     <item-panel class="itemPanel" :imgurl="imgurl" />
     <div :id="domId" ref="canvasPanel" class="canvasPanel" @dragover.prevent />
 
-    <div id="configPanel" :class="{ hidden: !configVisible }">
-      <div class="panel-title">
-        <p>属性面板</p>
-      </div>
+    <el-drawer title="属性面板" v-model="configVisible" :direction="direction">
+      <div id="configPanel">
+        <el-collapse v-model="activeNames">
+          <solt>
+            <el-collapse-item title="设备信息" name="1"> </el-collapse-item>
+          </solt>
+          <el-collapse-item title="图片设置" name="2">
+            <div class="form-item">
+              <label>宽度</label>
+              <el-input v-model="node.width" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>高度</label>
+              <el-input v-model="node.height" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <!-- <label>图片地址</label> <el-input size="small"></el-input> -->
+              <label>图片地址</label>
+              <el-select v-model="node.img" placeholder="请选择">
+                <el-option
+                  v-for="(itemimglist, index) in imglistAll"
+                  :key="index"
+                  :label="itemimglist.level"
+                  :value="itemimglist.imgsrc"
+                  :change="changeingsrc(itemimglist)"
+                >
+                  <span style="float: left">{{ itemimglist.level }}</span>
+                  <img
+                    :src="getImageUrl(itemimglist.imgsrc)"
+                    alt=""
+                    style="
+                      float: right;
+                      color: #8492a6;
+                      width: 20px;
+                      margin-top: 10px;
+                    "
+                  />
+                </el-option>
+              </el-select>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item title="标题设置" name="3">
+            <div class="form-item">
+              <label>标题</label>
+              <el-input v-model="node.label" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>字体大小</label>
+              <el-input
+                v-model="labelCfg.style.fontSize"
+                size="small"
+              ></el-input>
+            </div>
+            <div class="form-item">
+              <label>文本颜色</label>
+              <el-input v-model="labelCfg.style.fill" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>文本描边</label>
+              <el-input v-model="labelCfg.style.stroke" size="small"></el-input>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
 
-      <el-collapse v-model="activeNames">
-        <solt>
-          <el-collapse-item title="设备信息" name="1"> </el-collapse-item>
-        </solt>
-        <el-collapse-item title="图片设置" name="2">
-          <div class="form-item">
-            <label>宽度</label> <el-input size="mini"></el-input>
-          </div>
-          <div class="form-item">
-            <label>高度</label> <el-input size="mini"></el-input>
-          </div>
-          <div class="form-item">
-            <label>图片地址</label> <el-input size="mini"></el-input>
-          </div>
-     
-          
-          
-        </el-collapse-item>
-        <el-collapse-item title="标题设置" name="3"> 
-          <div class="form-item">
-            <label>标题</label> <el-input size="mini"></el-input>
-          </div>
-          <div class="form-item">
-            <label>字体大小</label> <el-input size="mini"></el-input>
-          </div>
-          <div class="form-item">
-            <label>文本颜色</label> <el-input size="mini"></el-input>
-          </div>
-          <div class="form-item">
-            <label>文本描边</label> <el-input size="mini"></el-input>
-          </div>
-        </el-collapse-item>
-        
-      </el-collapse>
-      
-      <div class="footerBtn">
-        <el-button @click="configVisible = false">取消</el-button>
-        <el-button class="save" @click="save">保存</el-button>
+        <div class="footerBtn">
+          <el-button @click="configVisible = false">取消</el-button>
+          <el-button class="save" @click="save">保存</el-button>
+        </div>
       </div>
-    
-    </div>
-
-    <!-- <div
-      v-if="tooltip && !isMouseDown"
-      class="g6-tooltip"
-      :style="`top: ${top}px; left: ${left}px;`"
-    >
-      id: {{ tooltip }}
-    </div> -->
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -65,7 +81,9 @@ import registerFactory from "../../components/graph/graph";
 import ItemPanel from "./ItemPanel.vue";
 import data from "./data";
 // import data from "./data.js";
-import { imgurl } from "../static/static";
+import { imglistAll as imglistAll1, imgurl } from "../static/static";
+
+import { reactive, toRaw } from "vue";
 
 export default {
   name: "graphVue",
@@ -88,6 +106,7 @@ export default {
   },
   data() {
     return {
+      imglistAll1: imglistAll1,
       mode: "drag-shadow-node",
       graph: {},
       highLight: {
@@ -99,24 +118,25 @@ export default {
         type: "line",
         width: 1,
       },
-      label: "",
-      labelCfg: {
-        fontSize: 12,
+      labelCfg: reactive({
         style: {
-          fill: "#fff",
+          fontSize: 12,
+          fill: "",
+          fontWeight: 400,
+          stroke: "",
         },
-      },
-      node: {
-        fill: "",
-        lineDash: "none",
-        borderColor: "",
-        width: 160,
-        height: 60,
-        shape: "rect-node",
-      },
+      }),
+      configType: "node",
+      node: reactive({
+        label: "22",
+        width: 40,
+        height: 35,
+        stroke: "",
+        img: "",
+      }),
       activeNames: 1,
-      headVisible: false,
       configVisible: false,
+      direction: "rtl",
       isMouseDown: false,
       config: "",
       tooltip: "",
@@ -124,17 +144,44 @@ export default {
       left: 0,
     };
   },
+  computed: {
+    configData() {
+      return {
+        ...this.node,
+        labelCfg: this.labelCfg,
+        // labelCfg: this.labelCfg,
+      };
+    },
+    imglistAll() {
+      return this.imglistAll1.filter((item) => {
+        return item.level == this.node.level;
+      });
+    },
+  },
   mounted() {
     // 创建画布
     this.$nextTick(() => {
       this.createGraphic();
       this.initGraphEvent();
+      console.log("this===>", this.configData, imglistAll);
     });
   },
   beforeUnmount() {
     this.graph.destroy();
   },
   methods: {
+    getImageUrl(name) {
+      return new URL(`/src/assets/images/topo/${name}`, import.meta.url).href;
+    },
+    changeingsrc() {},
+    deepToRaw(obj) {
+      if (!obj || typeof obj !== "object") return obj;
+      const rawObj = Array.isArray(obj) ? [] : {};
+      for (const key in obj) {
+        rawObj[key] = this.deepToRaw(toRaw(obj[key]));
+      }
+      return rawObj;
+    },
     createGraphic() {
       const vm = this;
       const grid = new G6.Grid();
@@ -233,12 +280,12 @@ export default {
           default: [
             "drag-canvas",
             "drag-shadow-node",
-
+            // "drag-node",
             "canvas-event",
             "delete-item",
             // "select-node",
             "hover-node",
-            "active-edge",
+            // "active-edge",
           ],
           originDrag: [
             "drag-canvas",
@@ -429,22 +476,28 @@ export default {
     deleteNode(item) {
       this.graph.removeItem(item);
     },
-    editNode(){
-      this.configVisible = true
+    editNode(e) {
+      this.configVisible = true;
+      this.visible = true;
+      let model = e?._cfg.model;
+      this.node = Object.assign(this.node, model);
+      console.log("this.node ", this.node);
+      // console.log("e",e)
     },
     // 添加节点
     addNode(transferData, { x, y }, comboId = "") {
-      let { label, shape, fill, img, width, height, level } =
+      let { label, shape = 'img-node', fill, img, width, height, level } =
         JSON.parse(transferData);
       const model = {
         id: this.guid(),
         comboId: comboId,
         level,
         label: label ? label : " ",
+        labelCfg: toRaw(this.labelCfg),
         //   counts: [12, 11], //一般问题 和严重问题的数量
         width: Number(width),
         height: Number(height),
-        type: "rect-node",
+        type: shape,
         img: img,
         style: {
           fill: fill || "",
@@ -458,8 +511,17 @@ export default {
 
       this.graph.addItem("node", model);
     },
-    save() {
-      window.alert("我觉得就算我不写你也会了");
+    async save() {
+      // window.alert("我觉得就算我不写你也会了");
+      await this.$nextTick();
+      this.graph.refresh();
+      let item = this.graph.findById(this.node.id);
+
+      let model = this.deepToRaw(this.configData);
+      console.log("model", model, item);
+
+      // let newmodal = item.
+      this.graph.updateItem(toRaw(item), model);
     },
     guid() {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -508,7 +570,7 @@ export default {
       }
     }
   }
-  .hidden{
+  .hidden {
     display: none;
   }
   ::v-deep(.g6-minimap) {
@@ -519,28 +581,20 @@ export default {
   }
 
   #configPanel {
-    width: 350px;
-    position: absolute;
-    top: 0px;
-    right: 0px;
     background: white;
     height: 100%;
-    border-left: 1px solid #c3c3c3;
     padding: 10px;
-    .panel-title {
-      font-weight: 500;
-    }
-    .form-item{
+
+    .form-item {
       display: flex;
       align-items: center;
       margin-bottom: 5px;
-      label{
+      label {
         flex-basis: 80px;
       }
-
     }
   }
-  .footerBtn{
+  .footerBtn {
     margin-top: 10px;
     text-align: center;
   }
