@@ -4,6 +4,8 @@ export default (G6) => {
       return {
         "node:mouseenter": "onNodeEnter",
         "node:mouseleave": "onNodeLeave",
+        "combo:mouseenter": "onNodeEnter",
+        "combo:mouseleave": "onNodeLeave",
       };
     },
     shouldBegin() {

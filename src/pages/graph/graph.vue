@@ -1,5 +1,6 @@
 <template>
   <div class="root">
+    <el-button @click="clickgraph"> 123123 </el-button>
     <item-panel class="itemPanel" :imgurl="imgurl" />
     <div :id="domId" ref="canvasPanel" class="canvasPanel" @dragover.prevent />
 
@@ -108,6 +109,7 @@ export default {
     return {
       imglistAll1: imglistAll1,
       mode: "drag-shadow-node",
+      dropCombo: false,
       graph: {},
       highLight: {
         undo: false,
@@ -163,13 +165,17 @@ export default {
     this.$nextTick(() => {
       this.createGraphic();
       this.initGraphEvent();
-      console.log("this===>", this.configData, imglistAll);
+      console.log("this===>", this.configData);
     });
   },
   beforeUnmount() {
     this.graph.destroy();
   },
   methods: {
+    clickgraph() {
+      let graphdata = this.graph.save();
+      console.log("S", graphdata);
+    },
     getImageUrl(name) {
       return new URL(`/src/assets/images/topo/${name}`, import.meta.url).href;
     },
@@ -218,9 +224,13 @@ export default {
       const cfg = registerFactory(G6, {
         width: this.$refs.canvasPanel.innerwidth,
         height: this.$refs.canvasPanel.innerHeight,
+        // groupByTypes: false,
         // renderer: 'svg',
         layout: {
           type: "", // 位置将固定
+        },
+        defaultCombo: {
+          type: "base-combo-rect",
         },
         // // 所有节点默认配置
         // defaultNode: {
@@ -278,23 +288,43 @@ export default {
         modes: {
           // 支持的 behavior
           default: [
-            "drag-canvas",
+            "drag-node",
             "drag-shadow-node",
-            // "drag-node",
-            "canvas-event",
+            // {
+             "canvas-event",
+             "drag-canvas",
+              // enableDrop: true,
+            // },
+           
+           
             "delete-item",
-            // "select-node",
+            "drag-combo",
             "hover-node",
+            // 'hover-combo'
             // "active-edge",
           ],
           originDrag: [
-            "drag-canvas",
+            // "drag-canvas",
+            // "drag-node",
+            // "canvas-event",
+            // "delete-item",
+            // "select-node",
+            // "hover-node",
+            // "active-edge",
+
+            {
+              type: "canvas-event",
+              enableDrop: true,
+            },
+            "drag-shadow-node",
             "drag-node",
             "canvas-event",
             "delete-item",
-            "select-node",
+
             "hover-node",
-            "active-edge",
+
+            "drag-combo",
+            // "select-combo",
           ],
         },
         plugins: [menu, minimap, grid],
@@ -302,6 +332,7 @@ export default {
       });
 
       this.graph = new G6.Graph(cfg);
+
       this.graph.read(data); // 读取数据
       // this.graph.paint(); // 渲染到页面
       // this.graph.get('canvas').set('localRefresh', false); // 关闭局部渲染
@@ -309,7 +340,14 @@ export default {
     },
     // 初始化图事件
     initGraphEvent() {
-      this.graph.on("drop", (e) => {
+      // toRaw(this.graph.get("canvas")).cfg.droppable = true;
+      // const canvas = toRaw(this.graph.get("canvas")).get("el");
+      // canvas.setAttribute("droppable", "true");
+
+      this.graph.on("drop", (e,i) => {
+      debugger
+        if (this.dropCombo) return;
+
         const { originalEvent } = e;
 
         if (originalEvent.dataTransfer) {
@@ -318,6 +356,23 @@ export default {
 
           if (transferData) {
             this.addNode(transferData, e);
+          }
+        }
+      });
+
+      this.graph.on("combo:drop", (e) => {
+        const { originalEvent } = e;
+        if (originalEvent.dataTransfer) {
+          const transferData =
+            originalEvent.dataTransfer.getData("dragComponent");
+
+          if (transferData) {
+            let id = e.item.get("id");
+            this.dropCombo = true;
+            this.addNode(transferData, e, id);
+            setTimeout(() => {
+              this.dropCombo = false;
+            }, 1000);
           }
         }
       });
@@ -463,6 +518,8 @@ export default {
           }, 100);
         }
       );
+
+      console.log(this.graph.get("canvas"));
     },
     changeMode() {
       if (this.mode === "drag-node") {
@@ -486,8 +543,25 @@ export default {
     },
     // 添加节点
     addNode(transferData, { x, y }, comboId = "") {
-      let { label, shape = 'img-node', fill, img, width, height, level } =
-        JSON.parse(transferData);
+      let shape = (JSON.parse(transferData)?.shape ?? "").toLocaleLowerCase();
+
+      if (!shape.includes("combo")) {
+        this.addimgNode(transferData, { x, y }, comboId);
+      } else {
+        this.addcombo(transferData, { x, y }, comboId);
+      }
+    },
+
+    addimgNode(transferData, { x, y }, comboId) {
+      let {
+        label,
+        shape = "img-node",
+        fill,
+        img,
+        width,
+        height,
+        level,
+      } = JSON.parse(transferData);
       const model = {
         id: this.guid(),
         comboId: comboId,
@@ -511,15 +585,56 @@ export default {
 
       this.graph.addItem("node", model);
     },
+
+    addcombo(transferData, { x, y }) {
+      let {
+        label,
+        shape = "img-node",
+        fill,
+        width = 100,
+        height = 100,
+      } = JSON.parse(transferData);
+      let model = {
+        id: this.guid(),
+        type: shape,
+        // padding: [10, 10],
+        size: [200, 200],
+        width: 200,
+        height: 200,
+        stroke: "#999",
+        fill: "#F8FAFE",
+        style: {
+          stroke: "#999",
+          fill: "#F8FAFE",
+          lineWidth: 1,
+          lineDash: [1, 2],
+        },
+        label: "123123",
+        labelCfg: {
+          position: "top",
+          refY: shape == "base-combo" ? -30 : 20,
+          style: {
+            fontSize: 12,
+            fill: "#1890ff",
+            stroke: "#1890ff",
+            textAlign: "center",
+          },
+        },
+        x,
+        y,
+      };
+
+      let combo = this.graph.addItem("combo", model);
+      let combo1 = this.graph.findById(combo.get("id"));
+      this.graph.refreshItem(combo1); //刷新拖入的当前分组容器
+    },
     async save() {
       // window.alert("我觉得就算我不写你也会了");
       await this.$nextTick();
       this.graph.refresh();
       let item = this.graph.findById(this.node.id);
-
       let model = this.deepToRaw(this.configData);
       console.log("model", model, item);
-
       // let newmodal = item.
       this.graph.updateItem(toRaw(item), model);
     },

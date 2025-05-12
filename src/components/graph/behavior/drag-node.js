@@ -1,117 +1,131 @@
-export default (G6) => {
-  G6.registerBehavior("drag-shadow-node", {
+export default G6 => {
+  G6.registerBehavior('drag-shadow-node', {
     getDefaultCfg() {
       return {
-        isGragging: false,
-        ismouseUP: false,
+        isGragging:        false,
         sourceAnchorIndex: 0,
         // 记录当前拖拽模式(拖拽目标可能是节点也可能是锚点)
-        dragTarget: "node",
-        dragStartNode: {},
-        distance: [], // 鼠标距离节点中心位置的距离
+        dragTarget:        'node',
+        dragStartNode:     {},
+        distance:          [], // 鼠标距离节点中心位置的距离
       };
     },
     getEvents() {
       return {
-        "node:mousedown": "onMousedown",
-        "node:mouseup": "onMouseup",
-        "node:dragstart": "onDragStart",
-        "node:drag": "onDrag",
-        "node:dragend": "onDragEnd",
-        "node:drop": "onDrop",
+        'node:mousedown': 'onMousedown',
+        'node:mouseup':   'onMouseup',
+        'node:dragstart': 'onDragStart',
+        'node:drag':      'onDrag',
+        'node:dragend':   'onDragEnd',
+        'node:drop':      'onDrop',
+
+        'combo:mousedown': 'onMousedown',
+        'combo:mouseup':   'onMouseup',
+        'combo:dragstart': 'onDragStart',
+        'combo:drag':      'onDrag',
+        'combo:dragend':   'onDragEnd',
+        'combo:drop':      'onDrop',
       };
     },
-    shouldBegin() {
+    shouldBegin(e) {
       return true;
     },
     // 鼠标按下显示锚点光圈
     onMousedown(e) {
-      // 清空已选的边
       if (!this.shouldBegin(e)) return;
+
       this._clearSelected(e);
       if (e.target.cfg.isAnchor) {
         // 拖拽锚点
-        this.dragTarget = "anchor";
+
+        this.dragTarget = 'anchor';
         this.dragStartNode = {
           ...e.item._cfg,
           anchorIndex: e.target.cfg.index,
         };
-        const nodes = this.graph.findAll("node", (node) => node);
-
-        nodes.forEach((node) => {
-          node.setState("anchorActived", true);
+        let  nodes = this.graph.findAll('node', node => node);
+        let  combo = this.graph.findAll('combo', combo => combo);
+        nodes = [...combo,...nodes]
+        nodes.forEach(node => {
+          node.setState('anchorActived', true);
         });
-      } else {
-        this.ismouseUP = true;
       }
-      this.graph.emit("on-node-mousedown", e);
+      this.graph.emit('on-node-mousedown', e);
     },
     onMouseup(e) {
       if (!this.shouldBegin(e)) return;
-      if (this.dragTarget === "anchor") {
-        const nodes = this.graph.findAll("node", (node) => node);
+      if (this.dragTarget === 'anchor') {
 
-        nodes.forEach((node) => {
-          node.clearStates("anchorActived");
+        let  nodes = this.graph.findAll('node', node => node);
+        let  combo = this.graph.findAll('combo', combo => combo);
+        nodes = [...combo,...nodes]
+
+        nodes.forEach(node => {
+          node.clearStates('anchorActived');
         });
-      } else {
-        this.ismouseUP = false;
       }
-      this.graph.emit("on-node-mouseup", e);
+
+      this.graph.emit('on-node-mouseup', e);
     },
     // 拖拽开始
     onDragStart(e) {
+
       if (!this.shouldBegin(e)) return;
       const group = e.item.getContainer();
-
       this.isGragging = true;
       this.origin = {
         x: e.x,
         y: e.y,
       };
-      if (e.target.get("isAnchor")) {
+
+      if (e.target.get('isAnchor')) {
         // 拖拽锚点, 记录当前点击的锚点 index
-        this.sourceAnchorIndex = e.target.get("index");
-      } else if (group.getFirst().cfg.xShapeNode) {
-        // 拖拽自定义节点
-        e.item.toFront();
-        this.dragTarget = "node";
-        this.ismouseUP ? this._nodeOnDragStart(e, group) : "";
+        this.sourceAnchorIndex = e.target.get('index');
       }
-      this.graph.emit("on-node-dragstart", e);
+      // else if (group.getFirst().cfg.xShapeNode) {
+      //   // 拖拽自定义节点
+      //   e.item.toFront();
+      //   this.dragTarget = 'node';
+      //   this._nodeOnDragStart(e, group);
+      // }
+      this.graph.emit('on-node-dragstart', e);
     },
     // 拖拽中
-    onDrag(e) {
+    onDrag (e) {
       if (!this.shouldBegin(e)) return;
       if (this.isGragging) {
         const group = e.item.getContainer();
 
-        if (this.dragTarget === "node" && group.getFirst().cfg.xShapeNode) {
-          this._nodeOnDrag(e, e.item.getContainer());
-        }
-        this.graph.emit("on-node-drag", e);
+        // if (this.dragTarget === 'node' && group.getFirst().cfg.xShapeNode) {
+        //   this._nodeOnDrag(e, e.item.getContainer());
+        // }
+
+        this.graph.emit('on-node-drag', e);
+
       }
     },
     // 拖拽结束
     onDragEnd(e) {
+
       if (!this.shouldBegin(e)) return;
       const group = e.item.getContainer();
 
       this.isGragging = false;
-      if (this.dragTarget === "anchor") {
-        const nodes = this.graph.findAll("node", (node) => node);
-
-        nodes.forEach((node) => {
-          node.clearStates("anchorActived");
+      if (this.dragTarget === 'anchor') {
+        let  nodes = this.graph.findAll('node', node => node);
+        let  combo = this.graph.findAll('combo', combo => combo);
+        nodes = [...combo,...nodes]
+        nodes.forEach(node => {
+          node.clearStates('anchorActived');
         });
-      } else if (
-        this.dragTarget === "node" &&
-        group.getFirst().cfg.xShapeNode
-      ) {
-        this._nodeOnDragEnd(e, group);
+        // console.log("123333",e)
+        // this.graph.emit('on-combo-dragend', e);
+      }else if(this.dragTarget === 'combo-drag'){
+
       }
-      this.graph.emit("on-node-dragend", e);
+      this.graph.emit('on-node-dragend', e);
     },
+
     // 锚点拖拽结束添加边
     onDrop(e) {
       if (!this.shouldBegin(e)) return;
@@ -121,45 +135,47 @@ export default (G6) => {
         e.target.cfg.isAnchor &&
         this.dragStartNode.id !== e.target.cfg.nodeId
       ) {
-        const sourceNode = this.dragStartNode.group.get("item");
+        const sourceNode = this.dragStartNode.group.get('item');
         const { singleEdge } = sourceNode.getModel(); // 同个source和同个target只能有1条线
-        const targetAnchorIndex = e.target.get("index");
+        const targetAnchorIndex = e.target.get('index');
         const edges = sourceNode.getOutEdges();
 
-        const hasLinked = edges.find((edge) => {
+        const hasLinked = edges.find(edge => {
           // sourceAnchorIndex === targetAnchorIndex, edge.source.id === source.id, edget.target.id === target.id
           if (
-            (edge.get("source").get("id") === sourceNode.get("id") &&
-              edge.get("target").get("id") === e.target.cfg.nodeId &&
-              edge.get("sourceAnchorIndex") === this.sourceAnchorIndex &&
-              edge.get("targetAnchorIndex") === targetAnchorIndex) ||
-            (singleEdge && edge.get("target").get("id") === e.target.cfg.nodeId)
+            (edge.get('source').get('id') === sourceNode.get('id') &&
+              edge.get('target').get('id') === e.target.cfg.nodeId &&
+              edge.get('sourceAnchorIndex') === this.sourceAnchorIndex &&
+              edge.get('targetAnchorIndex') === targetAnchorIndex) ||
+            (singleEdge &&
+              edge.get('target').get('id') === e.target.cfg.nodeId)
           ) {
             return true;
           }
         });
 
         if (!hasLinked) {
-          this.graph.emit("before-edge-add", {
-            source: sourceNode,
-            target: e.item.getContainer().get("item"),
+          this.graph.emit('before-edge-add', {
+            source:       sourceNode,
+            target:       e.item.getContainer().get('item'),
             sourceAnchor: this.dragStartNode.anchorIndex,
             targetAnchor: e.target.cfg.index,
           });
         }
       }
-      this.graph.emit("on-node-drop", e);
+      this.graph.emit('on-node-drop', e);
+      this.graph.emit('on-combo-drop', e);
     },
 
     /**
      * @description 判断当前画布模式是否启用了内置的 drag-node, 因为有冲突
      */
     _dragNodeModeCheck() {
-      const currentMode = this.graph.get("modes")[this.graph.getCurrentMode()];
+      const currentMode = this.graph.get(' modes')[this.graph.getCurrentMode()];
 
-      if (currentMode.includes("drag-node")) {
+      if (currentMode.includes('drag-node')) {
         console.warn(
-          "Behavior drag-shadow-node 与内置 Behavior drag-node 在行为上有冲突, 请考虑改用 setMode 来分开两种错误, 或在以上两种行为的入参 shouldBegin 方法中添加逻辑处理来避免冲突"
+          'Behavior drag-shadow-node 与内置 Behavior drag-node 在行为上有冲突, 请考虑改用 setMode 来分开两种错误, 或在以上两种行为的入参 shouldBegin 方法中添加逻辑处理来避免冲突',
         );
         return true;
       }
@@ -169,224 +185,192 @@ export default (G6) => {
     /**
      * @description 节点拖拽开始事件
      */
-    _nodeOnDragStart(e, group) {
-      this._dragNodeModeCheck();
-      this._addShadowNode(e, group);
-    },
+    // _nodeOnDragStart(e, group) {
+    //   this._dragNodeModeCheck();
+    //   this._addShadowNode(e, group);
+    // },
 
     /**
      * @description 添加虚拟节点
      */
-    _addShadowNode(e, group) {
-      const item = group.get("item");
-      const model = item.get("model");
-      const { radius } = item.get("originStyle");
-      const currentShape = item.get("currentShape");
-      const { width, height, centerX, centerY } = item.getBBox();
-      const shapes = item.get("shapeFactory")[currentShape];
-      let img;
-      if (model.img) {
-        const imgurl = `@/assets/images/topo/${model.img}`;
-        img = new URL(imgurl.replace("@", "/src"), import.meta.url).href;
-      }
+    // _addShadowNode(e, group) {
+    //   const item = group.get('item');
+    //   const model = item.get('model');
+    //   const { radius } = item.get('originStyle');
+    //   const currentShape = item.get('currentShape');
+    //   const { width, height, centerX, centerY } = item.getBBox();
+    //   const shapes = item.get('shapeFactory')[currentShape];
 
-      let { shapeType } = shapes || {},
-        attrs = {
-          fillOpacity: 0.1,
-          img: img,
-          fill: "",
-          stroke: "",
-          cursor: "move",
-          // lineDash: [4, 4],
-          lineWidth: 0,
-          width,
-          height,
-          x: model.x,
-          y: model.y,
-        };
+    //   let { shapeType } = shapes || {},
+    //     attrs = {
+    //       fillOpacity: 0.1,
+    //       fill:        '#1890FF',
+    //       stroke:      '#1890FF',
+    //       cursor:      'move',
+    //       lineDash:    [4, 4],
+    //       width,
+    //       height,
+    //       x:           model.x,
+    //       y:           model.y,
+    //     };
 
-      switch (shapeType) {
-        case "circle":
-          this.distance = [e.x - centerX, e.y - centerY];
-          attrs = {
-            ...attrs,
-            r: width / 2,
-          };
-          break;
-        case "rect":
-          this.distance = [
-            e.x - centerX + width / 2,
-            e.y - centerY + height / 2,
-          ];
-          attrs = {
-            ...attrs,
-            x: -width / 2,
-            y: -height / 2,
-            r: width / 2,
-          };
-          if (radius) attrs.radius = radius;
-          break;
-        case "ellipse":
-          this.distance = [e.x - centerX, e.y - centerY];
-          attrs = {
-            ...attrs,
-            rx: width / 2,
-            ry: height / 2,
-          };
-          break;
-        case "path":
-          this.distance = [e.x - centerX, e.y - centerY];
-          attrs.path = item.get("keyShape").attrs.path;
-          attrs.size = [width, height];
-          break;
-        case "modelRect":
-          this.distance = [
-            e.x - centerX + width / 2,
-            e.y - centerY + height / 2,
-          ];
-          attrs = {
-            ...attrs,
-            x: -width / 2,
-            y: -height / 2,
-            r: width / 2,
-          };
-          shapeType = "rect";
-          break;
-        default:
-          shapeType = "circle";
-          break;
-      }
+    //   switch (shapeType) {
+    //     case 'circle':
+    //       this.distance = [e.x - centerX, e.y - centerY];
+    //       attrs = {
+    //         ...attrs,
+    //         r: width / 2,
+    //       };
+    //       break;
+    //     case 'rect':
+    //       this.distance = [
+    //         e.x - centerX + width / 2,
+    //         e.y - centerY + height / 2,
+    //       ];
+    //       attrs = {
+    //         ...attrs,
+    //         x: -width / 2,
+    //         y: -height / 2,
+    //         r: width / 2,
+    //       };
+    //       if (radius) attrs.radius = radius;
+    //       break;
+    //     case 'ellipse':
+    //       this.distance = [e.x - centerX, e.y - centerY];
+    //       attrs = {
+    //         ...attrs,
+    //         rx: width / 2,
+    //         ry: height / 2,
+    //       };
+    //       break;
+    //     case 'path':
+    //       this.distance = [e.x - centerX, e.y - centerY];
+    //       attrs.path = item.get('keyShape').attrs.path;
+    //       attrs.size = [width, height];
+    //       break;
+    //     case 'modelRect':
+    //       this.distance = [
+    //         e.x - centerX + width / 2,
+    //         e.y - centerY + height / 2,
+    //       ];
+    //       attrs = {
+    //         ...attrs,
+    //         x: -width / 2,
+    //         y: -height / 2,
+    //         r: width / 2,
+    //       };
+    //       shapeType = 'rect';
+    //       break;
+    //     default:
+    //       shapeType = 'circle';
+    //       break;
+    //   }
 
-      const shadowNode = group.addShape("image", {
-        className: "shadow-node",
-        attrs,
-      });
+    //   const shadowNode = group.addShape(shapeType, {
+    //     className: 'shadow-node',
+    //     attrs,
+    //   });
 
-      // if (model.img) {
-      //   const imgurl = `@/assets/images/topo/${model.img}`;
-      //   let img = new URL(imgurl.replace("@", "/src"), import.meta.url).href;
-      //   group.addShape("image", {
-      //     attrs: {
-      //       x: model.x,
-      //       y: model.y,
-      //       width: width,
-      //       height: height,
-      //       img: img,
-      //       clipCfg: {
-      //         show: false,
-      //         type: "circle",
-      //         r: 50,
-      //       },
-      //     },
-      //     draggable: true,
-      //   });
-      // }
-      shadowNode.toFront();
-    },
+    //   shadowNode.toFront();
+    // },
 
-    /**
-     * @description 节点拖拽事件
-     */
-    _nodeOnDrag(e, group) {
-      // 记录鼠标拖拽时与图形中心点坐标的距离
-      const item = group.get("item");
-      const pathAttrs = group.getFirst();
-      const { width, height, centerX, centerY } = item.getBBox();
-      const shadowNode = pathAttrs.cfg.xShapeNode
-        ? group.$getItem("shadow-node")
-        : null;
-      const shapes = item.get("shapeFactory")[item.get("currentShape")];
-      const { shapeType } = shapes || {};
+    // /**
+    //  * @description 节点拖拽事件
+    //  */
+    // _nodeOnDrag(e, group) {
+    //   // 记录鼠标拖拽时与图形中心点坐标的距离
+    //   const item = group.get('item');
+    //   const pathAttrs = group.getFirst();
+    //   const { width, height, centerX, centerY } = item.getBBox();
+    //   const shadowNode = pathAttrs.cfg.xShapeNode
+    //     ? group.$getItem('shadow-node')
+    //     : null;
+    //   const shapes = item.get('shapeFactory')[item.get('currentShape')];
+    //   const { shapeType } = shapes || {};
 
-      if (!shadowNode) {
-        return console.warn("暂未支持拖拽内置节点");
-      }
-      if (shapeType === "path") {
-        const { type, direction } = pathAttrs.get("attrs");
-        const dx = e.x - centerX - this.distance[0];
-        const dy = e.y - centerY - this.distance[1];
-        const path = [["Z"]];
+    //   if (!shadowNode) {
+    //     return console.warn('暂未支持拖拽内置节点');
+    //   }
+    //   if (shapeType === 'path') {
+    //     const { type, direction } = pathAttrs.get('attrs');
+    //     const dx = e.x - centerX - this.distance[0];
+    //     const dy = e.y - centerY - this.distance[1];
+    //     const path = [['Z']];
 
-        switch (type) {
-          case "diamond-node":
-            path.unshift(
-              ["M", dx, dy - height / 2], // 上顶点
-              ["L", dx + width / 2, dy], // 右侧顶点
-              ["L", dx, dy + height / 2], // 下顶点
-              ["L", dx - width / 2, dy] // 左侧顶点
-            );
-            break;
-          case "triangle-node":
-            path.unshift(
-              ["L", dx + width / 2, dy], // 右侧顶点
-              ["L", dx - width / 2, dy] // 左侧顶点
-            );
-            if (direction === "up") {
-              path.unshift(
-                ["M", dx, dy - height] // 上顶点
-              );
-            } else {
-              path.unshift(
-                ["M", dx, dy + height] // 下顶点
-              );
-            }
-            break;
-        }
+    //     switch (type) {
+    //       case 'diamond-node':
+    //         path.unshift(
+    //           ['M', dx, dy - height / 2], // 上顶点
+    //           ['L', dx + width / 2, dy], // 右侧顶点
+    //           ['L', dx, dy + height / 2], // 下顶点
+    //           ['L', dx - width / 2, dy], // 左侧顶点
+    //         );
+    //         break;
+    //       case 'triangle-node':
+    //         path.unshift(
+    //           ['L', dx + width / 2, dy], // 右侧顶点
+    //           ['L', dx - width / 2, dy], // 左侧顶点
+    //         );
+    //         if (direction === 'up') {
+    //           path.unshift(
+    //             ['M', dx, dy - height], // 上顶点
+    //           );
+    //         } else {
+    //           path.unshift(
+    //             ['M', dx, dy + height], // 下顶点
+    //           );
+    //         }
+    //         break;
+    //     }
 
-        shadowNode.attr({
-          path,
-        });
-      } else {
-        shadowNode.attr({
-          x: e.x - centerX - this.distance[0],
-          y: e.y - centerY - this.distance[1],
-        });
-      }
+    //     shadowNode.attr({
+    //       path,
+    //     });
+    //   } else {
+    //     shadowNode.attr({
+    //       x: e.x - centerX - this.distance[0],
+    //       y: e.y - centerY - this.distance[1],
+    //     });
+    //   }
 
-      shadowNode.toFront();
-    },
+    //   shadowNode.toFront();
+    // },
 
-    /**
-     * @description 节点拖拽结束事件
-     */
-    _nodeOnDragEnd(e, group) {
-      const { graph } = this;
+    // /**
+    //  * @description 节点拖拽结束事件
+    //  */
+    // _nodeOnDragEnd(e, group) {
+    //   const { graph } = this;
+    //   const model = e.item.getModel();
+    //   const shadowNode = group.getFirst().cfg.xShapeNode
+    //     ? group.$getItem('shadow-node')
+    //     : null;
 
-      const model = e.item.getModel();
-      const shadowNode = group.getFirst().cfg.xShapeNode
-        ? group.$getItem("shadow-node")
-        : null;
+    //   if (shadowNode) {
+    //     const x = e.x - this.origin.x + model.x;
+    //     const y = e.y - this.origin.y + model.y;
+    //     const pos = {
+    //       x,
+    //       y,
+    //     };
 
-      if (shadowNode) {
-        const x = e.x - this.origin.x + model.x;
-        const y = e.y - this.origin.y + model.y;
-        const pos = {
-          x,
-          y,
-        };
-        // model.x =x
-        // model.y = y
-        shadowNode.remove();
+    //     shadowNode.remove();
 
-        if (!this._dragNodeModeCheck()) {
-          // e.item.attr({
-          //   x: pos.x,
-          //   y: pos.y,
-          // });
-          // 如果当前模式中没有使用内置的 drag-node 则让画布更新节点位置
-          graph.updateItem(e.item, pos);
-        }
-      }
-    },
+    //     if (!this._dragNodeModeCheck()) {
+    //       // 如果当前模式中没有使用内置的 drag-node 则让画布更新节点位置
+    //       graph.updateItem(e.item, pos);
+    //     }
+    //   }
+    // },
     // 清空已选的边
-    _clearSelected() {
+    _clearSelected(e) {
       const selectedEdges = this.graph.findAllByState(
-        "edge",
-        "edgeState:selected"
+        'edge',
+        'edgeState:selected',
       );
 
-      selectedEdges.forEach((edge) => {
-        edge.clearStates(["edgeState:selected", "edgeState:hover"]);
+      selectedEdges.forEach(edge => {
+        edge.clearStates(['edgeState:selected', 'edgeState:hover']);
       });
     },
   });

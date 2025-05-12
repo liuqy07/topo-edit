@@ -10,29 +10,6 @@ import anchorEvent from "./anchor-event";
 import { imgurl as imglist } from "@/pages/static/static.js";
 // const { nodeStyles, anchorPointStyles, nodeLabelStyles } = defaultStyles;
 
-// function getStyle(options, cfg) {
-//     return {
-//     ...cfg,
-//     // 自定义默认样式
-//     ...nodeStyles,
-//     ...options,
-//     // 当前节点样式
-//     // ...cfg.style,
-//     // 文本配置
-//     labelCfg: {
-//       ...nodeLabelStyles,
-//       ...cfg.labelCfg,
-//     },
-//     // 锚点样式
-//     anchorPointStyles: {
-//       ...anchorPointStyles,
-//       ...cfg.anchorPointStyles,
-//     },
-//     ...cfg.nodeStateStyles,
-//     // 锚点高亮样式
-//     anchorHotsoptStyles: cfg.anchorHotsoptStyles,
-//   };
-// }
 
 /*
  * 注册基础node => 添加锚点/图标 => 绘制node => 初始化node状态 => node动画(设置交互动画)

@@ -14,7 +14,7 @@
             draggable="true"
             data-label=""
             :data-img="item.imgsrc"
-            :data-shape="item.type"
+            :data-shape="item?.type ?? 'img-node'"
             :data-width="item.width"
             :data-height="item.height"
             :data-level="item.level"
@@ -45,6 +45,8 @@
             draggable="true"
             data-label=""
             data-shape="base-combo"
+            data-width="100"
+            data-height="100"
           >
             <svg class="svgcom">
               <circle
@@ -61,6 +63,8 @@
             draggable="true"
             data-label=""
             data-shape="base-combo-rect"
+            data-width="100"
+            data-height="100"
           >
             <svg class="svgcom">
               <rect
