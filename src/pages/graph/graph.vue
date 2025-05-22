@@ -174,7 +174,7 @@ export default {
   methods: {
     clickgraph() {
       let graphdata = this.graph.save();
-      console.log("S", graphdata);
+      console.log("S", graphdata, this.graph.getNodes());
     },
     getImageUrl(name) {
       return new URL(`/src/assets/images/topo/${name}`, import.meta.url).href;
@@ -224,7 +224,7 @@ export default {
       const cfg = registerFactory(G6, {
         width: this.$refs.canvasPanel.innerwidth,
         height: this.$refs.canvasPanel.innerHeight,
-        // groupByTypes: false,
+        groupByTypes: true,
         // renderer: 'svg',
         layout: {
           type: "", // 位置将固定
@@ -232,86 +232,22 @@ export default {
         defaultCombo: {
           type: "base-combo-rect",
         },
-        // // 所有节点默认配置
-        // defaultNode: {
-        //   type: "rect-node",
-        //   style: {
-        //     lineDash: [1, 1],
 
-        //     cursor: "move",
-        //     fill: "#ecf3ff",
-        //   },
-        //   labelCfg: {
-        //     fontSize: 20,
-        //     style: {
-        //       cursor: "move",
-        //     },
-        //   },
-        // },
-        // // 所有边的默认配置
-        // defaultEdge: {
-        //   type: "line-edge", // 扩展了内置边, 有边的事件
-        //   style: {
-        //     radius: 5,
-        //     offset: 15,
-        //     stroke: "#aab7c3",
-        //     lineAppendWidth: 10, // 防止线太细没法点中
-        //     endArrow: true,
-        //   },
-        // },
-        // // 覆盖全局样式
-        // nodeStateStyles: {
-        //   "nodeState:default": {
-        //     opacity: 1,
-        //   },
-        //   "nodeState:hover": {
-        //     opacity: 0.8,
-        //   },
-        //   "nodeState:selected": {
-        //     opacity: 0.9,
-        //   },
-        // },
-        // // 默认边不同状态下的样式集合
-        // edgeStateStyles: {
-        //   "edgeState:default": {
-        //     stroke: "#aab7c3",
-        //   },
-        //   "edgeState:selected": {
-        //     stroke: "#1890FF",
-        //   },
-        //   "edgeState:hover": {
-        //     animate: true,
-        //     animationType: "dash",
-        //     stroke: "#1890FF",
-        //   },
-        // },
         modes: {
           // 支持的 behavior
           default: [
-            "drag-node",
             "drag-shadow-node",
-            // {
-             "canvas-event",
-             "drag-canvas",
-              // enableDrop: true,
-            // },
-           
-           
+            "canvas-event",
+            "drag-canvas",
             "delete-item",
-            "drag-combo",
             "hover-node",
-            // 'hover-combo'
-            // "active-edge",
+            "hover-combo",
+            "drag-canvas",
+            "drag-node",
+            "drag-combo",
+            "collapse-expand-combo",
           ],
           originDrag: [
-            // "drag-canvas",
-            // "drag-node",
-            // "canvas-event",
-            // "delete-item",
-            // "select-node",
-            // "hover-node",
-            // "active-edge",
-
             {
               type: "canvas-event",
               enableDrop: true,
@@ -338,18 +274,59 @@ export default {
       // this.graph.get('canvas').set('localRefresh', false); // 关闭局部渲染
       // this.graph.fitView();
     },
+
+    isOutsideCombo(point, combo) {
+      if (!combo || !point) return true;
+
+      // 考虑 Combo 的 padding 和折叠状态
+      const bbox = combo.getBBox();
+      const padding = combo.getModel().padding || 0;
+      return !(
+        point.x >= bbox.minX - padding &&
+        point.x <= bbox.maxX + padding &&
+        point.y >= bbox.minY - padding &&
+        point.y <= bbox.maxY + padding
+      );
+    },
+
     // 初始化图事件
     initGraphEvent() {
       // toRaw(this.graph.get("canvas")).cfg.droppable = true;
       // const canvas = toRaw(this.graph.get("canvas")).get("el");
       // canvas.setAttribute("droppable", "true");
+      this.graph.on("updateLayout", (e) => {
+        console.log("1111111111111111111111111111111111111", e);
+      });
 
-      this.graph.on("drop", (e,i) => {
-      debugger
+      this.graph.on("on-node-dragend", (e) => {
+        const model = e.item.getModel();
+        const comboId = model.comboId;
+        const combo = this.graph.findById(comboId); // 自定义方法判断所属Combo
+        const point = this.graph.getPointByClient(e.clientX, e.clientY);
+        if (this.isOutsideCombo(point, combo)) {
+          if (!combo) return;
+          // combo.removeChild(e.item);
+          this.$nextTick(() => {
+            this.graph.refreshItem(combo);
+            this.graph.updateComboTree(combo);
+            let { r } = combo._cfg.sizeCache;
+            if (r > 400) {
+              this.graph.removeItem(e.item);
+              model.id = this.guid();
+              model.comboId = "";
+              this.graph.addItem("node", model);
+            }
+          });
+
+          // this.graph.updateComboTree(combo)
+
+          // let s = this.graph.getComboChildren(comboId);
+        }
+      });
+
+      this.graph.on("drop", (e) => {
         if (this.dropCombo) return;
-
         const { originalEvent } = e;
-
         if (originalEvent.dataTransfer) {
           const transferData =
             originalEvent.dataTransfer.getData("dragComponent");
@@ -362,16 +339,17 @@ export default {
 
       this.graph.on("combo:drop", (e) => {
         const { originalEvent } = e;
+
         if (originalEvent.dataTransfer) {
           const transferData =
             originalEvent.dataTransfer.getData("dragComponent");
-
           if (transferData) {
             let id = e.item.get("id");
             this.dropCombo = true;
             this.addNode(transferData, e, id);
             setTimeout(() => {
               this.dropCombo = false;
+              this.graph.updateCombo(id);
             }, 1000);
           }
         }
@@ -506,6 +484,7 @@ export default {
       this.graph.on(
         "before-edge-add",
         ({ source, target, sourceAnchor, targetAnchor }) => {
+          console.log(source, target);
           setTimeout(() => {
             this.graph.addItem("edge", {
               id: `${+new Date() + (Math.random() * 10000).toFixed(0)}`, // edge id
@@ -538,7 +517,7 @@ export default {
       this.visible = true;
       let model = e?._cfg.model;
       this.node = Object.assign(this.node, model);
-      console.log("this.node ", this.node);
+      console.log("this.node ", this.node, model);
       // console.log("e",e)
     },
     // 添加节点
@@ -583,7 +562,10 @@ export default {
         y,
       };
 
-      this.graph.addItem("node", model);
+      const newNode = this.graph.addItem("node", model);
+      this.graph.updateLayout({ refresh: true });
+
+      return newNode;
     },
 
     addcombo(transferData, { x, y }) {
@@ -598,9 +580,9 @@ export default {
         id: this.guid(),
         type: shape,
         // padding: [10, 10],
-        size: [200, 200],
-        width: 200,
-        height: 200,
+        size: [width, height],
+        width: width,
+        height: height,
         stroke: "#999",
         fill: "#F8FAFE",
         style: {
@@ -609,7 +591,7 @@ export default {
           lineWidth: 1,
           lineDash: [1, 2],
         },
-        label: "123123",
+        label: label,
         labelCfg: {
           position: "top",
           refY: shape == "base-combo" ? -30 : 20,
@@ -623,20 +605,52 @@ export default {
         x,
         y,
       };
-
       let combo = this.graph.addItem("combo", model);
       let combo1 = this.graph.findById(combo.get("id"));
-      this.graph.refreshItem(combo1); //刷新拖入的当前分组容器
+      let comboNode = JSON.parse(transferData);
+      comboNode.shape = "img-node";
+      comboNode.label = " ";
+
+      const modelNode = {
+        id: this.guid(),
+        comboId: combo.get("id"),
+        level: "OLT",
+        label: " ",
+        labelCfg: toRaw(this.labelCfg),
+        //   counts: [12, 11], //一般问题 和严重问题的数量
+        width: 40,
+        height: 40,
+        type: "img-node",
+        img: "olt_1.png",
+        style: {
+          fill: "",
+          width: 40,
+          height: 40,
+        },
+        // 坐标
+        x,
+        y,
+      };
+
+      //  this.addimgNode(JSON.stringify(comboNode), { x, y }, combo1);
+      this.graph.addItem("node", modelNode);
+      this.$nextTick(() => {
+         this.graph.refreshItem(combo);
+        this.graph.updateCombo(combo1);
+      });
+      //刷新拖入的当前分组容器
     },
     async save() {
-      // window.alert("我觉得就算我不写你也会了");
       await this.$nextTick();
-      this.graph.refresh();
+      // this.graph.refresh();
       let item = this.graph.findById(this.node.id);
       let model = this.deepToRaw(this.configData);
-      console.log("model", model, item);
+      // if(!item){
+      //   item =  this.graph.save().nodes.find(node => node.id === this.node.id)
+      // }
+      console.log("model", model, toRaw(item));
       // let newmodal = item.
-      this.graph.updateItem(toRaw(item), model);
+      this.graph.updateItem(this.node.id, model);
     },
     guid() {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(

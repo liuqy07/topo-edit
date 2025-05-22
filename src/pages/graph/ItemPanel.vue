@@ -43,10 +43,10 @@
           <div
             class="node"
             draggable="true"
-            data-label=""
+            data-label=" "
             data-shape="base-combo"
-            data-width="100"
-            data-height="100"
+            data-width="65"
+            data-height="65"
           >
             <svg class="svgcom">
               <circle
@@ -61,7 +61,7 @@
           <div
             class="node"
             draggable="true"
-            data-label=""
+            data-label=" "
             data-shape="base-combo-rect"
             data-width="100"
             data-height="100"

@@ -1,30 +1,30 @@
-export default G6 => {
-  G6.registerBehavior('drag-shadow-node', {
+export default (G6) => {
+  G6.registerBehavior("drag-shadow-node", {
     getDefaultCfg() {
       return {
-        isGragging:        false,
+        isGragging: false,
         sourceAnchorIndex: 0,
         // 记录当前拖拽模式(拖拽目标可能是节点也可能是锚点)
-        dragTarget:        'node',
-        dragStartNode:     {},
-        distance:          [], // 鼠标距离节点中心位置的距离
+        dragTarget: "node",
+        dragStartNode: {},
+        distance: [], // 鼠标距离节点中心位置的距离
       };
     },
     getEvents() {
       return {
-        'node:mousedown': 'onMousedown',
-        'node:mouseup':   'onMouseup',
-        'node:dragstart': 'onDragStart',
-        'node:drag':      'onDrag',
-        'node:dragend':   'onDragEnd',
-        'node:drop':      'onDrop',
+        "node:mousedown": "onMousedown",
+        "node:mouseup": "onMouseup",
+        "node:dragstart": "onDragStart",
+        "node:drag": "onDrag",
+        "node:dragend": "onDragEnd",
+        "node:drop": "onDrop",
 
-        'combo:mousedown': 'onMousedown',
-        'combo:mouseup':   'onMouseup',
-        'combo:dragstart': 'onDragStart',
-        'combo:drag':      'onDrag',
-        'combo:dragend':   'onDragEnd',
-        'combo:drop':      'onDrop',
+        "combo:mousedown": "onMousedown",
+        "combo:mouseup": "onMouseup",
+        "combo:dragstart": "onDragStart",
+        "combo:drag": "onDrag",
+        "combo:dragend": "onDragEnd",
+        "combo:drop": "onDrop",
       };
     },
     shouldBegin(e) {
@@ -38,38 +38,36 @@ export default G6 => {
       if (e.target.cfg.isAnchor) {
         // 拖拽锚点
 
-        this.dragTarget = 'anchor';
+        this.dragTarget = "anchor";
         this.dragStartNode = {
           ...e.item._cfg,
           anchorIndex: e.target.cfg.index,
         };
-        let  nodes = this.graph.findAll('node', node => node);
-        let  combo = this.graph.findAll('combo', combo => combo);
-        nodes = [...combo,...nodes]
-        nodes.forEach(node => {
-          node.setState('anchorActived', true);
+        let nodes = this.graph.findAll("node", (node) => node);
+        let combo = this.graph.findAll("combo", (combo) => combo);
+        nodes = [...combo, ...nodes];
+        nodes.forEach((node) => {
+          node.setState("anchorActived", true);
         });
       }
-      this.graph.emit('on-node-mousedown', e);
+      this.graph.emit("on-node-mousedown", e);
     },
     onMouseup(e) {
       if (!this.shouldBegin(e)) return;
-      if (this.dragTarget === 'anchor') {
+      if (this.dragTarget === "anchor") {
+        let nodes = this.graph.findAll("node", (node) => node);
+        let combo = this.graph.findAll("combo", (combo) => combo);
+        nodes = [...combo, ...nodes];
 
-        let  nodes = this.graph.findAll('node', node => node);
-        let  combo = this.graph.findAll('combo', combo => combo);
-        nodes = [...combo,...nodes]
-
-        nodes.forEach(node => {
-          node.clearStates('anchorActived');
+        nodes.forEach((node) => {
+          node.clearStates("anchorActived");
         });
       }
 
-      this.graph.emit('on-node-mouseup', e);
+      this.graph.emit("on-node-mouseup", e);
     },
     // 拖拽开始
     onDragStart(e) {
-
       if (!this.shouldBegin(e)) return;
       const group = e.item.getContainer();
       this.isGragging = true;
@@ -78,9 +76,9 @@ export default G6 => {
         y: e.y,
       };
 
-      if (e.target.get('isAnchor')) {
+      if (e.target.get("isAnchor")) {
         // 拖拽锚点, 记录当前点击的锚点 index
-        this.sourceAnchorIndex = e.target.get('index');
+        this.sourceAnchorIndex = e.target.get("index");
       }
       // else if (group.getFirst().cfg.xShapeNode) {
       //   // 拖拽自定义节点
@@ -88,10 +86,10 @@ export default G6 => {
       //   this.dragTarget = 'node';
       //   this._nodeOnDragStart(e, group);
       // }
-      this.graph.emit('on-node-dragstart', e);
+      this.graph.emit("on-node-dragstart", e);
     },
     // 拖拽中
-    onDrag (e) {
+    onDrag(e) {
       if (!this.shouldBegin(e)) return;
       if (this.isGragging) {
         const group = e.item.getContainer();
@@ -99,31 +97,31 @@ export default G6 => {
         // if (this.dragTarget === 'node' && group.getFirst().cfg.xShapeNode) {
         //   this._nodeOnDrag(e, e.item.getContainer());
         // }
+        
+        if (!e.item.getModel().type.includes("combo")) {
 
-        this.graph.emit('on-node-drag', e);
-
+          this.graph.emit("on-node-drag", e);
+        }
       }
     },
     // 拖拽结束
     onDragEnd(e) {
-
       if (!this.shouldBegin(e)) return;
       const group = e.item.getContainer();
 
       this.isGragging = false;
-      if (this.dragTarget === 'anchor') {
-        let  nodes = this.graph.findAll('node', node => node);
-        let  combo = this.graph.findAll('combo', combo => combo);
-        nodes = [...combo,...nodes]
-        nodes.forEach(node => {
-          node.clearStates('anchorActived');
+      if (this.dragTarget === "anchor") {
+        let nodes = this.graph.findAll("node", (node) => node);
+        let combo = this.graph.findAll("combo", (combo) => combo);
+        nodes = [...combo, ...nodes];
+        nodes.forEach((node) => {
+          node.clearStates("anchorActived");
         });
         // console.log("123333",e)
         // this.graph.emit('on-combo-dragend', e);
-      }else if(this.dragTarget === 'combo-drag'){
-
+      } else if (this.dragTarget === "combo-drag") {
       }
-      this.graph.emit('on-node-dragend', e);
+      this.graph.emit("on-node-dragend", e);
     },
 
     // 锚点拖拽结束添加边
@@ -135,47 +133,46 @@ export default G6 => {
         e.target.cfg.isAnchor &&
         this.dragStartNode.id !== e.target.cfg.nodeId
       ) {
-        const sourceNode = this.dragStartNode.group.get('item');
+        const sourceNode = this.dragStartNode.group.get("item");
         const { singleEdge } = sourceNode.getModel(); // 同个source和同个target只能有1条线
-        const targetAnchorIndex = e.target.get('index');
+        const targetAnchorIndex = e.target.get("index");
         const edges = sourceNode.getOutEdges();
 
-        const hasLinked = edges.find(edge => {
+        const hasLinked = edges.find((edge) => {
           // sourceAnchorIndex === targetAnchorIndex, edge.source.id === source.id, edget.target.id === target.id
           if (
-            (edge.get('source').get('id') === sourceNode.get('id') &&
-              edge.get('target').get('id') === e.target.cfg.nodeId &&
-              edge.get('sourceAnchorIndex') === this.sourceAnchorIndex &&
-              edge.get('targetAnchorIndex') === targetAnchorIndex) ||
-            (singleEdge &&
-              edge.get('target').get('id') === e.target.cfg.nodeId)
+            (edge.get("source").get("id") === sourceNode.get("id") &&
+              edge.get("target").get("id") === e.target.cfg.nodeId &&
+              edge.get("sourceAnchorIndex") === this.sourceAnchorIndex &&
+              edge.get("targetAnchorIndex") === targetAnchorIndex) ||
+            (singleEdge && edge.get("target").get("id") === e.target.cfg.nodeId)
           ) {
             return true;
           }
         });
 
         if (!hasLinked) {
-          this.graph.emit('before-edge-add', {
-            source:       sourceNode,
-            target:       e.item.getContainer().get('item'),
+          this.graph.emit("before-edge-add", {
+            source: sourceNode,
+            target: e.item.getContainer().get("item"),
             sourceAnchor: this.dragStartNode.anchorIndex,
             targetAnchor: e.target.cfg.index,
           });
         }
       }
-      this.graph.emit('on-node-drop', e);
-      this.graph.emit('on-combo-drop', e);
+      this.graph.emit("on-node-drop", e);
+      this.graph.emit("on-combo-drop", e);
     },
 
     /**
      * @description 判断当前画布模式是否启用了内置的 drag-node, 因为有冲突
      */
     _dragNodeModeCheck() {
-      const currentMode = this.graph.get(' modes')[this.graph.getCurrentMode()];
+      const currentMode = this.graph.get(" modes")[this.graph.getCurrentMode()];
 
-      if (currentMode.includes('drag-node')) {
+      if (currentMode.includes("drag-node")) {
         console.warn(
-          'Behavior drag-shadow-node 与内置 Behavior drag-node 在行为上有冲突, 请考虑改用 setMode 来分开两种错误, 或在以上两种行为的入参 shouldBegin 方法中添加逻辑处理来避免冲突',
+          "Behavior drag-shadow-node 与内置 Behavior drag-node 在行为上有冲突, 请考虑改用 setMode 来分开两种错误, 或在以上两种行为的入参 shouldBegin 方法中添加逻辑处理来避免冲突"
         );
         return true;
       }
@@ -365,12 +362,12 @@ export default G6 => {
     // 清空已选的边
     _clearSelected(e) {
       const selectedEdges = this.graph.findAllByState(
-        'edge',
-        'edgeState:selected',
+        "edge",
+        "edgeState:selected"
       );
 
-      selectedEdges.forEach(edge => {
-        edge.clearStates(['edgeState:selected', 'edgeState:hover']);
+      selectedEdges.forEach((edge) => {
+        edge.clearStates(["edgeState:selected", "edgeState:hover"]);
       });
     },
   });

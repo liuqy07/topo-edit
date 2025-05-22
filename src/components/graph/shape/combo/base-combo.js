@@ -55,12 +55,7 @@ export default (G6) => {
         return getStyle.call(
           this,
           {
-            //   stroke: "#999",
-            //   fill: "#F8FAFE",
-            //   lineWidth: 1,
-            //   lineDash: [3, 2],
             width,
-
             height,
             radius: 2,
             r,
@@ -96,9 +91,9 @@ export default (G6) => {
         const { type, direction, anchorPointStyles } = group.getFirst().attr();
         const item = group.get("children")[0];
         const bBox = item.getBBox();
-
-        // bBox.x = -bBox.width/2
-        // bBox.y = -bBox.height/2
+        console.log("item", item, group);
+        bBox.x = -bBox.width / 2;
+        bBox.y = -bBox.height / 2;
         const anchors = this.getAnchorPoints(cfg);
 
         // 绘制锚点坐标
@@ -240,35 +235,19 @@ export default (G6) => {
       drawShape(cfg, group) {
         // 元素分组
         // 合并外部样式和默认样式
-        const attrs = this.getShapeStyle(cfg, group);
         const style = this.getShapeStyle(cfg);
+        cfg.padding = cfg.padding || [0, 0, 0, 0];
 
-        // group.get("children")[1].attrs
-        // console.log("group,",group.get("children").attrs)
-        // 添加节点
-
-        // attrs.width = 200
-        // attrs.height = 200
-        // attrs.style.width = 200
-        // attrs.style.height = 200
-        // attrs.style.r = 100
-        // console.log("style=========================",style.r, attrs.style.r)
-        //attrs.style.width = attrs.style.size[0]
-        //attrs.style.height =attrs.style.size[1]
-        // attrs.x = -attrs.width/2
-        // attrs.y = - attrs.height/2
-
-        // attrs.r = 100
-        // attrs.x = 0
-        // attrs.y = 0
-        // let r =   attrs.size[0]
-
+        style.width = Number(style.width || 80); // 默认宽度保障可见性
+        style.height = Number(style.height || 40);
+        style.size = [style.width, style.height];
+        console.log("style===>", style);
         const shape = group.addShape(this.shapeType, {
           // shape 属性在定义时返回
           attrs: {
             ...style,
-            padding: [0, 0, 0, 0],
-            r: style.size[0],
+            padding: cfg.padding,
+            size: style.size,
             x: 0,
             y: 0,
           },
@@ -286,21 +265,17 @@ export default (G6) => {
         // 添加文本节点
         //this.addLabel(cfg, group, attrs);
         // 添加锚点
-        this.initAnchor(cfg, group);
+
         return shape;
       },
-      afterDraw(cfg, combo) {},
-      afterUpdate(cfg, combo) {
-   
-        // let group = combo.getKeyShape();
-        // group.attr({
-        //   ...cfg,
-         
-        // });
-        // if (combo._cfg.nodes[0] && combo._cfg.nodes[0]._cfg.visible == false) {
-        //   combo._cfg.nodes[0]._cfg.visible = true;
-        // }
+      afterDraw(cfg, combo) {
+        this.initAnchor(cfg, combo);
+        //  debugger
       },
+      afterUpdate(cfg, combo) {
+        console.log("333333333333333", combo);
+      },
+
       setState(name, value, item) {
         const buildInEvents = [
           "anchorShow",
@@ -342,7 +317,6 @@ export default (G6) => {
       },
     },
     "circle"
-    //"rect"
   );
   //  正方形的父容器自定义
 
@@ -352,13 +326,14 @@ export default (G6) => {
       getShapeStyle(cfg) {
         const width = cfg.style.width || 80;
         const height = cfg.style.height || 40;
-
+        const r = cfg.size[0];
         return getStyle.call(
           this,
           {
             width,
             height,
             radius: 2,
+            r,
             // 将图形中心坐标移动到图形中心, 用于方便鼠标位置计算
             x: -width / 2,
             y: -height / 2,
@@ -366,8 +341,6 @@ export default (G6) => {
           cfg
         );
       },
-      // 绘制图标
-
       // 绘制锚点
       initAnchor(cfg, group) {
         group.anchorShapes = [];
@@ -391,7 +364,7 @@ export default (G6) => {
         const { type, direction, anchorPointStyles } = group.getFirst().attr();
         const item = group.get("children")[0];
         const bBox = item.getBBox();
-
+        console.log("bBox", bBox, item, group);
         bBox.x = -bBox.width / 2;
         bBox.y = -bBox.height / 2;
         const anchors = this.getAnchorPoints(cfg);
@@ -532,20 +505,21 @@ export default (G6) => {
 
       /* 绘制节点，包含文本 */
       drawShape(cfg, group) {
-        // 元素分组
-        // 合并外部样式和默认样式
+        cfg.padding = cfg.padding || [5, 5, 5, 5];
         const style = this.getShapeStyle(cfg);
-        const width = Number(style.width || 80); // 默认宽度保障可见性
-        const height = Number(style.height || 40);
-        const x = -width / 2; // 中心对齐修正
-        const y = -height / 2;
-        const shape = group.addShape("rect", {
+        style.width = Number(style.width || 80); // 默认宽度保障可见性
+        style.height = Number(style.height || 40);
+        style.size = [style.width, style.height];
+        console.log("attrs===>", style);
+        const shape = group.addShape(this.shapeType, {
           // shape 属性在定义时返回
           attrs: {
-           ...style,
-          
-            x, // 修正中心对齐
-            y,
+            ...style,
+            x: -style.width / 2 - 40,
+            y: -style.height / 2 ,
+            width: style.width,
+            height: style.height,
+
             fill: "#F8FAFE", // 强制定义填充色
             stroke: "#999",
           },
@@ -562,15 +536,16 @@ export default (G6) => {
         };
 
         this.initAnchor(cfg, group);
- 
+
         return shape;
       },
       afterDraw(cfg, combo) {
         // let group = combo.get("children")[0];
         // group.attrs.x = 0;
-        
       },
-      afterUpdate(cfg, combo) {},
+      afterUpdate(cfg, combo) {
+        console.log("cfg", cfg, combo);
+      },
       setState(name, value, item) {
         const buildInEvents = [
           "anchorShow",

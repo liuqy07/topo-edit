@@ -11,7 +11,7 @@ export default (G6) => {
       },
       onNodeEnter(e) {
         if (!this.shouldBegin(e)) return;
-        // 显示当前节点的锚点
+        // 显示当前节点的锚点 
         e.item.setState("anchorShow", true); // 二值状态
       },
       onNodeLeave(e) {

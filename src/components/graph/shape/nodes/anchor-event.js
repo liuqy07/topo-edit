@@ -8,7 +8,7 @@ let dragLog = [], // 记录鼠标坐标
   anchorNodeId = null; // dragover 也会发生在拖拽的锚点上, 用于记录当前拖拽的节点id
 
 export default (anchor, group, p) => {
-  if(!anchor) return false
+  if (!anchor) return false;
   // 鼠标移入事件
   anchor.on("mouseenter", () => {
     // 可以传入多个键值对
@@ -19,28 +19,23 @@ export default (anchor, group, p) => {
 
   // 拖拽事件
   anchor.on("dragstart", (e) => {
-
     let canvans = document.querySelectorAll("canvas")[0];
     let zoom = canvans.getAttribute("zoom") || 1;
     e.stopPropagation();
     const { type, direction } = group.getFirst().attr();
 
     const diff = type === "triangle-node" ? (direction === "up" ? 1 : 0) : 0.5;
-    const bBox = group.get("item").getBBox();
+    let bBox = group.get("item").getBBox();
     const id = group.get("item").get("id");
-    let shapetype = group.get("item").getModel().type
-    // 判断是否是圆形的分组组件，若是分组的组件需要计算锚点的位置
-    if(shapetype == 'base-combo'){
-      let padding = group.get("item")._cfg.keyShape.attrs.padding
-      let size = group.get("item")._cfg.keyShape.attrs.size
-      let widther  =group.get("item")._cfg.keyShape.get("bbox").width //获取的是当前所在元素的的高度和宽度，而不是传入的size
+    // let shapetype = group.get("item").getModel().type;
 
-      bBox.width= widther
-      bBox.height= widther
-    }
+      let widther = group.get("item")._cfg.keyShape.get("bbox").width; //获取的是当前所在元素的的高度和宽度，而不是传入的size
+      bBox.width = widther;
+      bBox.height = widther;
+      
     const point = [
       bBox.width * (p[0] - 0.5), // x
-      bBox.height * (p[1] - diff), // y
+      bBox.height * (p[1] - diff), // y 
     ];
 
     dragLog = [e.x, e.y];
@@ -57,7 +52,7 @@ export default (anchor, group, p) => {
       className: "dashed-line",
       pointStart: point,
     });
-
+   
     // 置于顶层
     group.toFront();
     line.toFront(); // 最后把这条线层级提升至最高
@@ -79,15 +74,15 @@ export default (anchor, group, p) => {
     const diff =
       type === "triangle-node"
         ? direction === "up"
-          ? canvasBox.height/zoom
+          ? canvasBox.height / zoom
           : 0
-        : canvasBox.height/zoom / 2;
+        : canvasBox.height / zoom / 2;
     const pointStart = line.get("pointStart");
     const endPoint = [
-      e.x/zoom - canvasBox.x/zoom - canvasBox.width/zoom / 2,
-      e.y/zoom - canvasBox.y/zoom - diff,
+      e.x / zoom - canvasBox.x / zoom - canvasBox.width / zoom / 2,
+      e.y / zoom - canvasBox.y / zoom - diff,
     ];
-
+    // console.log("zoom",e,zoom,diff,pointStart,endPoint,)
     line.toFront();
     /**
      * 计算方法:
