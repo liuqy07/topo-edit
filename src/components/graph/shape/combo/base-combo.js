@@ -91,7 +91,7 @@ export default (G6) => {
         const { type, direction, anchorPointStyles } = group.getFirst().attr();
         const item = group.get("children")[0];
         const bBox = item.getBBox();
-        console.log("item", item, group);
+      
         bBox.x = -bBox.width / 2;
         bBox.y = -bBox.height / 2;
         const anchors = this.getAnchorPoints(cfg);
@@ -241,7 +241,7 @@ export default (G6) => {
         style.width = Number(style.width || 80); // 默认宽度保障可见性
         style.height = Number(style.height || 40);
         style.size = [style.width, style.height];
-        console.log("style===>", style);
+     
         const shape = group.addShape(this.shapeType, {
           // shape 属性在定义时返回
           attrs: {
@@ -273,7 +273,7 @@ export default (G6) => {
         //  debugger
       },
       afterUpdate(cfg, combo) {
-        console.log("333333333333333", combo);
+      
       },
 
       setState(name, value, item) {
@@ -364,7 +364,7 @@ export default (G6) => {
         const { type, direction, anchorPointStyles } = group.getFirst().attr();
         const item = group.get("children")[0];
         const bBox = item.getBBox();
-        console.log("bBox", bBox, item, group);
+
         bBox.x = -bBox.width / 2;
         bBox.y = -bBox.height / 2;
         const anchors = this.getAnchorPoints(cfg);
@@ -510,7 +510,7 @@ export default (G6) => {
         style.width = Number(style.width || 80); // 默认宽度保障可见性
         style.height = Number(style.height || 40);
         style.size = [style.width, style.height];
-        console.log("attrs===>", style);
+    
         const shape = group.addShape(this.shapeType, {
           // shape 属性在定义时返回
           attrs: {
@@ -544,7 +544,7 @@ export default (G6) => {
         // group.attrs.x = 0;
       },
       afterUpdate(cfg, combo) {
-        console.log("cfg", cfg, combo);
+      
       },
       setState(name, value, item) {
         const buildInEvents = [
@@ -595,7 +595,7 @@ export default (G6) => {
     {
       afterDraw(cfg, group) {
         // 定义云形路径（关键形状）
-        console.log("cfg", cfg, group);
+   
         const path = [
           ["M", 101, 23],
           ["C", 128, 23, 150, 43, 152, 70],

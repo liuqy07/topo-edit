@@ -6,7 +6,7 @@
 
     <el-drawer title="属性面板" v-model="configVisible" :direction="direction">
       <div id="configPanel">
-        <el-collapse v-model="activeNames">
+        <el-collapse v-model="activeNames" v-if="configType == 'node'">
           <solt>
             <el-collapse-item title="设备信息" name="1"> </el-collapse-item>
           </solt>
@@ -68,6 +68,110 @@
           </el-collapse-item>
         </el-collapse>
 
+        <el-collapse v-else-if="configType == 'edge'">
+          <el-collapse-item title="线条设置">
+            <div class="form-item">
+              <label>线条颜色</label>
+              <el-input v-model="line.style.stroke" size="small"></el-input>
+            </div>
+
+            <div class="form-item">
+              <label>曲线样式</label>
+              <el-input v-model="line.style.lineDash" size="small"></el-input>
+            </div>
+
+            <div class="form-item">
+              <label>标题</label>
+              <el-input v-model="line.label" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>字体大小</label>
+              <el-input
+                v-model="labelCfgLine.style.fontSize"
+                size="small"
+              ></el-input>
+            </div>
+            <div class="form-item">
+              <label>文本颜色</label>
+              <el-input
+                v-model="labelCfgLine.style.fill"
+                size="small"
+              ></el-input>
+            </div>
+            <!-- <div class="form-item">
+              <label>文本是否旋转</label>
+              <el-radio-group
+                v-model="labelCfgLine.style.autoRotate"
+                class="ml-4">
+                <el-radio label="true"> 是</el-radio>
+                <el-radio label="false">否</el-radio>
+              </el-radio-group>
+            </div> -->
+          </el-collapse-item>
+        </el-collapse>
+
+        <el-collapse v-else-if="configType == 'combo'">
+          <el-collapse-item title="组件设置">
+            <div class="form-item">
+              <label>标题</label>
+              <el-input v-model="combo.label" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>标题位置</label>
+              <el-select
+                v-model="labelCfgCombo.position"
+                class="m-2"
+                placeholder="Select"
+                size="small"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+
+            <div class="form-item">
+              <label>对齐方式</label>
+              <el-input
+                v-model="labelCfgCombo.style.textAlign"
+                size="small"
+              ></el-input>
+            </div>
+
+            <div class="form-item">
+              <label>上下偏移量</label>
+              <el-input v-model="labelCfgCombo.refY" size="small"></el-input>
+            </div>
+            <div class="form-item">
+              <label>左右偏移量</label>
+              <el-input v-model="labelCfgCombo.refX" size="small"></el-input>
+            </div>
+
+            <div class="form-item">
+              <label>字体大小</label>
+              <el-input
+                v-model="labelCfgCombo.style.fontSize"
+                size="small"
+              ></el-input>
+            </div>
+            <div class="form-item">
+              <label>文字颜色</label>
+              <el-input
+                v-model="labelCfgCombo.style.stroke"
+                size="small"
+              ></el-input>
+            </div>
+
+            <div class="form-item">
+              <label>背影填充色</label>
+              <el-input v-model="combo.style.fill" size="small"></el-input>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+
         <div class="footerBtn">
           <el-button @click="configVisible = false">取消</el-button>
           <el-button class="save" @click="save">保存</el-button>
@@ -83,7 +187,6 @@ import ItemPanel from "./ItemPanel.vue";
 import data from "./data";
 // import data from "./data.js";
 import { imglistAll as imglistAll1, imgurl } from "../static/static";
-
 import { reactive, toRaw } from "vue";
 
 export default {
@@ -108,37 +211,91 @@ export default {
   data() {
     return {
       imglistAll1: imglistAll1,
-      mode: "drag-shadow-node",
       dropCombo: false,
       graph: {},
-      highLight: {
-        undo: false,
-        redo: false,
+      options: [
+        {
+          label: "top",
+          value: "top",
+        },
+        {
+          label: "bottom",
+          value: "bottom",
+        },
+        {
+          label: "left",
+          value: "left",
+        },
+        {
+          label: "right",
+          value: "right",
+        },
+      ],
+      combo: {
+        size: [60, 60],
+        width: 60,
+        height: 60,
+        stroke: "#999",
+        fill: "#F8FAFE",
+        style: {
+          stroke: "#999",
+          fill: "#F8FAFE",
+          lineWidth: 1,
+          lineDash: [1, 2],
+        },
+        label: "",
       },
-      // 保存线条样式
-      lineStyle: {
-        type: "line",
-        width: 1,
+      line: {
+        label: "",
+        style: {
+          lineDash: [1,0],
+          stroke: "",
+          lineWidth: "",
+        },
       },
-      labelCfg: reactive({
+
+      labelCfg: {
         style: {
           fontSize: 12,
           fill: "",
           fontWeight: 400,
           stroke: "",
         },
-      }),
+      },
+
+      labelCfgLine: {
+        style: {
+          // refX: undefined,
+          // refY: undefined,
+          fontSize: 12,
+          position: "",
+          fill: "#1890ff",
+          autoRotate: false,
+        },
+      },
+
+      labelCfgCombo: {
+        position: "top",
+        refX: undefined,
+        refY: undefined,
+        style: {
+          fontSize: 12,
+          fill: "",
+          stroke: "",
+          textAlign: "center",
+        },
+      },
       configType: "node",
-      node: reactive({
-        label: "22",
+      
+      node: {
+        label: "",
         width: 40,
         height: 35,
         stroke: "",
         img: "",
-      }),
+      },
       activeNames: 1,
       configVisible: false,
-      direction: "rtl",
       isMouseDown: false,
       config: "",
       tooltip: "",
@@ -151,7 +308,36 @@ export default {
       return {
         ...this.node,
         labelCfg: this.labelCfg,
-        // labelCfg: this.labelCfg,
+      };
+    },
+    configcomboData() {
+      let labelCfgCombo = JSON.parse(JSON.stringify(this.labelCfgCombo));
+      for (const key in labelCfgCombo) {
+        if (key == "refX" || key == "refY") {
+          labelCfgCombo[key] = Number(labelCfgCombo[key]);
+        }
+      }
+      console.log("labelCfgCombo", labelCfgCombo);
+      return {
+        ...this.combo,
+        labelCfg: labelCfgCombo,
+      };
+    },
+
+    configLineData() {
+      let labelCfgLine = JSON.parse( JSON.stringify((this.line.style)) );
+      let lineDash = labelCfgLine?.lineDash ?? undefined;
+      if (lineDash) {
+        if (Object.prototype.toString.call(lineDash) == "[object String]") {
+          labelCfgLine.lineDash = JSON.parse(lineDash);
+        }
+      }
+      return {
+        label:this.line.label,
+        style:{
+          ...labelCfgLine,
+        },
+        labelCfg: this.labelCfgLine,
       };
     },
     imglistAll() {
@@ -159,13 +345,18 @@ export default {
         return item.level == this.node.level;
       });
     },
+    comboRef() {
+      return (
+        this.labelCfgCombo.position === "top" ||
+        this.labelCfgCombo.position === "bottom"
+      );
+    },
   },
   mounted() {
     // 创建画布
     this.$nextTick(() => {
       this.createGraphic();
       this.initGraphEvent();
-      console.log("this===>", this.configData);
     });
   },
   beforeUnmount() {
@@ -181,7 +372,14 @@ export default {
     },
     changeingsrc() {},
     deepToRaw(obj) {
-      if (!obj || typeof obj !== "object") return obj;
+      let arr = ["wdith", "height", "refX", "refY"];
+      if (!obj || typeof obj !== "object") {
+        for (const key1 in obj) {
+          if (arr.includes(key1)) obj[key1] = Number(obj[key1]);
+        }
+        return obj;
+      }
+
       const rawObj = Array.isArray(obj) ? [] : {};
       for (const key in obj) {
         rawObj[key] = this.deepToRaw(toRaw(obj[key]));
@@ -194,7 +392,7 @@ export default {
       const menu = new G6.Menu({
         offsetX: 5,
         offsetY: 5,
-        itemTypes: ["node", "edge"],
+        itemTypes: ["node", "edge", "combo"],
         getContent() {
           const outDiv = document.createElement("div");
           outDiv.className = "contextmenu";
@@ -256,9 +454,7 @@ export default {
             "drag-node",
             "canvas-event",
             "delete-item",
-
             "hover-node",
-
             "drag-combo",
             // "select-combo",
           ],
@@ -266,13 +462,8 @@ export default {
         plugins: [menu, minimap, grid],
         // ... 其他G6原生入参
       });
-
       this.graph = new G6.Graph(cfg);
-
       this.graph.read(data); // 读取数据
-      // this.graph.paint(); // 渲染到页面
-      // this.graph.get('canvas').set('localRefresh', false); // 关闭局部渲染
-      // this.graph.fitView();
     },
 
     isOutsideCombo(point, combo) {
@@ -291,13 +482,6 @@ export default {
 
     // 初始化图事件
     initGraphEvent() {
-      // toRaw(this.graph.get("canvas")).cfg.droppable = true;
-      // const canvas = toRaw(this.graph.get("canvas")).get("el");
-      // canvas.setAttribute("droppable", "true");
-      this.graph.on("updateLayout", (e) => {
-        console.log("1111111111111111111111111111111111111", e);
-      });
-
       this.graph.on("on-node-dragend", (e) => {
         const model = e.item.getModel();
         const comboId = model.comboId;
@@ -310,17 +494,13 @@ export default {
             this.graph.refreshItem(combo);
             this.graph.updateComboTree(combo);
             let { r } = combo._cfg.sizeCache;
-            if (r > 400) {
+            if (r > 250) {
               this.graph.removeItem(e.item);
               model.id = this.guid();
               model.comboId = "";
               this.graph.addItem("node", model);
             }
           });
-
-          // this.graph.updateComboTree(combo)
-
-          // let s = this.graph.getComboChildren(comboId);
         }
       });
 
@@ -492,6 +672,15 @@ export default {
               target: target.get("id"),
               sourceAnchor,
               targetAnchor,
+              label: "",
+              labelCfg: {
+                style: {
+                  refX: "",
+                  refY: "",
+                  position: "",
+                  autoRotate: false,
+                },
+              },
               // label:  'edge label',
             });
           }, 100);
@@ -500,25 +689,71 @@ export default {
 
       console.log(this.graph.get("canvas"));
     },
-    changeMode() {
-      if (this.mode === "drag-node") {
-        this.mode = "drag-shadow-node";
-        this.graph.setMode("default");
-      } else {
-        this.mode = "drag-node";
-        this.graph.setMode("originDrag");
-      }
-    },
+
     deleteNode(item) {
       this.graph.removeItem(item);
     },
-    editNode(e) {
+    async editNode(e) {
+      await this.$nextTick();
       this.configVisible = true;
       this.visible = true;
       let model = e?._cfg.model;
-      this.node = Object.assign(this.node, model);
-      console.log("this.node ", this.node, model);
-      // console.log("e",e)
+      let type = e?._cfg.type;
+      this.configType = type;
+      let lineDash
+      switch (type) {
+        case "node":
+          this.node = Object.assign(this.node, model);
+          this.labelCfg = Object.assign(this.labelCfg, model.labelCfg);
+          break;
+        case "edge":
+         lineDash = this.configLineData?.style?.lineDash ??  reactive([])
+       
+          this.line = Object.assign( this.configLineData, model);
+          this.line.style.lineDash = JSON.stringify(toRaw(lineDash))
+          console.log("this.line", this.line, this.labelCfgLine);
+
+          break;
+        case "combo":
+          this.combo = Object.assign(this.configcomboData, model);
+          break;
+        default:
+          break;
+      }
+    },
+    async save() {
+      await this.$nextTick();
+      const configType = this.configType;
+      let model, combo;
+      switch (configType) {
+        case "node":
+          model = this.deepToRaw(this.configData);
+          this.graph.updateItem(this.node.id, model);
+          break;
+        case "edge":
+          console.log("this.line", this.line);
+          model = toRaw(this.configLineData);
+          console.log("model======>", model);
+
+          this.graph.updateItem(this.line.id, model);
+          break;
+        // 可以有多个 case
+        case "combo":
+          model = this.deepToRaw(this.configcomboData);
+          console.log("model======>1", model);
+
+          this.graph.updateItem(this.combo.id, model);
+          combo = this.graph.findById(this.combo.id);
+          this.$nextTick(() => {
+            this.graph.refreshItem(combo);
+            this.graph.updateCombo(combo);
+          });
+
+          break;
+
+        default:
+        // 当 expression 不匹配任何 case 时执行的代码
+      }
     },
     // 添加节点
     addNode(transferData, { x, y }, comboId = "") {
@@ -546,7 +781,14 @@ export default {
         comboId: comboId,
         level,
         label: label ? label : " ",
-        labelCfg: toRaw(this.labelCfg),
+        labelCfg: {
+          style: {
+            fontSize: 12,
+            fill: "",
+            fontWeight: 400,
+            stroke: "",
+          },
+        },
         //   counts: [12, 11], //一般问题 和严重问题的数量
         width: Number(width),
         height: Number(height),
@@ -572,7 +814,7 @@ export default {
       let {
         label,
         shape = "img-node",
-        fill,
+        // fill,
         width = 100,
         height = 100,
       } = JSON.parse(transferData);
@@ -594,7 +836,7 @@ export default {
         label: label,
         labelCfg: {
           position: "top",
-          refY: shape == "base-combo" ? -30 : 20,
+
           style: {
             fontSize: 12,
             fill: "#1890ff",
@@ -635,23 +877,12 @@ export default {
       //  this.addimgNode(JSON.stringify(comboNode), { x, y }, combo1);
       this.graph.addItem("node", modelNode);
       this.$nextTick(() => {
-         this.graph.refreshItem(combo);
+        this.graph.refreshItem(combo);
         this.graph.updateCombo(combo1);
       });
       //刷新拖入的当前分组容器
     },
-    async save() {
-      await this.$nextTick();
-      // this.graph.refresh();
-      let item = this.graph.findById(this.node.id);
-      let model = this.deepToRaw(this.configData);
-      // if(!item){
-      //   item =  this.graph.save().nodes.find(node => node.id === this.node.id)
-      // }
-      console.log("model", model, toRaw(item));
-      // let newmodal = item.
-      this.graph.updateItem(this.node.id, model);
-    },
+
     guid() {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
         /[xy]/g,

@@ -43,7 +43,7 @@
           <div
             class="node"
             draggable="true"
-            data-label=" "
+            data-label="123123"
             data-shape="base-combo"
             data-width="65"
             data-height="65"
