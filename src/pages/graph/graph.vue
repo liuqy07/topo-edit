@@ -98,15 +98,7 @@
                 size="small"
               ></el-input>
             </div>
-            <!-- <div class="form-item">
-              <label>文本是否旋转</label>
-              <el-radio-group
-                v-model="labelCfgLine.style.autoRotate"
-                class="ml-4">
-                <el-radio label="true"> 是</el-radio>
-                <el-radio label="false">否</el-radio>
-              </el-radio-group>
-            </div> -->
+          
           </el-collapse-item>
         </el-collapse>
 
@@ -248,7 +240,7 @@ export default {
       line: {
         label: "",
         style: {
-          lineDash: [1,0],
+          lineDash: [1, 0],
           stroke: "",
           lineWidth: "",
         },
@@ -286,7 +278,7 @@ export default {
         },
       },
       configType: "node",
-      
+
       node: {
         label: "",
         width: 40,
@@ -325,7 +317,7 @@ export default {
     },
 
     configLineData() {
-      let labelCfgLine = JSON.parse( JSON.stringify((this.line.style)) );
+      let labelCfgLine = JSON.parse(JSON.stringify(this.line.style));
       let lineDash = labelCfgLine?.lineDash ?? undefined;
       if (lineDash) {
         if (Object.prototype.toString.call(lineDash) == "[object String]") {
@@ -333,8 +325,8 @@ export default {
         }
       }
       return {
-        label:this.line.label,
-        style:{
+        label: this.line.label,
+        style: {
           ...labelCfgLine,
         },
         labelCfg: this.labelCfgLine,
@@ -365,7 +357,8 @@ export default {
   methods: {
     clickgraph() {
       let graphdata = this.graph.save();
-      console.log("S", graphdata, this.graph.getNodes());
+      this.$emit("saveTopo",graphdata)
+      // console.log("S", graphdata, this.graph.getNodes());
     },
     getImageUrl(name) {
       return new URL(`/src/assets/images/topo/${name}`, import.meta.url).href;
@@ -541,54 +534,56 @@ export default {
         });
       });
 
-      this.graph.on("after-node-selected", (e) => {
-        this.configVisible = !!e;
-        if (e && e.item) {
-          let modelcfg = {
-            labelCfg: {
-              fontSize: "12px",
-              style: {
-                fill: "red",
-              },
-            },
-          };
-          let model = e.item.get("model");
-          model = { ...modelcfg, ...model };
-          this.config = model;
-          this.label = model.label;
-          this.labelCfg = {
-            fontSize: model.labelCfg.fontSize,
-            style: {
-              fill: model.labelCfg.style.fill,
-            },
-          };
-          this.node = {
-            fill: model.style.fill,
-            borderColor: model.style.stroke,
-            lineDash: model.style.lineDash || "none",
-            width: model.style.width,
-            height: model.style.height,
-            shape: model.type,
-          };
-        }
-      });
+      // this.graph.on("after-node-selected", (e) => {
+      //   this.configVisible = !!e;
+      //   if (e && e.item) {
+      //     let modelcfg = {
+      //       labelCfg: {
+      //         fontSize: "12px",
+      //         style: {
+      //           fill: "",
+      //         },
+      //       },
+      //     };
+      //     let model = e.item.get("model");
+      //     model = { ...modelcfg, ...model };
+      //     this.config = model;
+      //     this.label = model.label;
+      //     this.labelCfg = {
+      //       fontSize: model.labelCfg.fontSize,
+      //       style: {
+      //         fill: model.labelCfg.style.fill,
+      //       },
+      //     };
+      //     this.node = {
+      //       fill: model.style.fill,
+      //       borderColor: model.style.stroke,
+      //       lineDash: model.style.lineDash || "none",
+      //       width: model.style.width,
+      //       height: model.style.height,
+      //       shape: model.type,
+      //     };
+      //   }
+      // });
 
-      this.graph.on("on-node-mouseenter", (e) => {
-        if (e && e.item) {
-          e.item.getOutEdges().forEach((edge) => {
-            edge.clearStates("edgeState");
-            edge.setState("edgeState", "hover");
-          });
-        }
-      });
+      // this.graph.on("on-node-mouseenter", (e) => {
+      //   if (e && e.item) {
+      //     e.item.getOutEdges().forEach((edge) => {
+      //       edge.clearStates("edgeState");
+      //       edge.setState("edgeState", "hover");
+      //     });
+      //   }
+      // });
 
       // 鼠标拖拽到画布外时特殊处理
       this.graph.on("mousedown", () => {
         this.isMouseDown = true;
       });
+
       this.graph.on("mouseup", () => {
         this.isMouseDown = false;
       });
+      
       this.graph.on("canvas:mouseleave", () => {
         this.graph.getNodes().forEach((x) => {
           const group = x.getContainer();
@@ -625,41 +620,41 @@ export default {
         }, 1000);
       });
 
-      this.graph.on("after-node-dblclick", (e) => {
-        if (e && e.item) {
-          console.log(e.item);
-        }
-      });
+      // this.graph.on("after-node-dblclick", (e) => {
+      //   if (e && e.item) {
+      //     console.log(e.item);
+      //   }
+      // });
 
-      this.graph.on("after-edge-selected", (e) => {
-        this.configVisible = !!e;
+      // this.graph.on("after-edge-selected", (e) => {
+      //   this.configVisible = !!e;
 
-        if (e && e.item) {
-          this.config = e.item.get("model").id;
+      //   if (e && e.item) {
+      //     this.config = e.item.get("model").id;
 
-          this.graph.updateItem(e.item, {
-            // shape: 'line-edge',
-            style: {
-              radius: 10,
-              lineWidth: 2,
-            },
-          });
-        }
-      });
+      //     this.graph.updateItem(e.item, {
+      //       // shape: 'line-edge',
+      //       style: {
+      //         radius: 10,
+      //         lineWidth: 2,
+      //       },
+      //     });
+      //   }
+      // });
 
-      this.graph.on("on-edge-mousemove", (e) => {
-        if (e && e.item) {
-          this.tooltip = e.item.get("model").label;
-          this.left = e.clientX + 40;
-          this.top = e.clientY - 20;
-        }
-      });
+      // this.graph.on("on-edge-mousemove", (e) => {
+      //   if (e && e.item) {
+      //     this.tooltip = e.item.get("model").label;
+      //     this.left = e.clientX + 40;
+      //     this.top = e.clientY - 20;
+      //   }
+      // });
 
-      this.graph.on("on-edge-mouseleave", (e) => {
-        if (e && e.item) {
-          this.tooltip = "";
-        }
-      });
+      // this.graph.on("on-edge-mouseleave", (e) => {
+      //   if (e && e.item) {
+      //     this.tooltip = "";
+      //   }
+      // });
 
       this.graph.on(
         "before-edge-add",
@@ -687,7 +682,7 @@ export default {
         }
       );
 
-      console.log(this.graph.get("canvas"));
+
     },
 
     deleteNode(item) {
@@ -700,17 +695,17 @@ export default {
       let model = e?._cfg.model;
       let type = e?._cfg.type;
       this.configType = type;
-      let lineDash
+      let lineDash;
       switch (type) {
         case "node":
           this.node = Object.assign(this.node, model);
           this.labelCfg = Object.assign(this.labelCfg, model.labelCfg);
           break;
         case "edge":
-         lineDash = this.configLineData?.style?.lineDash ??  reactive([])
-       
-          this.line = Object.assign( this.configLineData, model);
-          this.line.style.lineDash = JSON.stringify(toRaw(lineDash))
+          lineDash = this.configLineData?.style?.lineDash ?? reactive([]);
+
+          this.line = Object.assign(this.configLineData, model);
+          this.line.style.lineDash = JSON.stringify(toRaw(lineDash));
           console.log("this.line", this.line, this.labelCfgLine);
 
           break;
@@ -754,6 +749,7 @@ export default {
         default:
         // 当 expression 不匹配任何 case 时执行的代码
       }
+      this.configVisible = false;
     },
     // 添加节点
     addNode(transferData, { x, y }, comboId = "") {
