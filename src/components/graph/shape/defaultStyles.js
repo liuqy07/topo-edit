@@ -6,78 +6,108 @@
 export default {
   // node默认样式
   nodeStyles: {
-    fill: "#ecf3ff", // 浅蓝
-    stroke: "#1890FF", // 深蓝
+    // fill:      '#ecf3ff', // 浅蓝
+    stroke:    '', //  默认颜色
     lineWidth: 1,
-
   },
   // node 交互样式
-  nodeStateStyles: {
-    "nodeState:default": {
-      fill: "#ecf3ff",
+  comboStateStyles: {
+    'comboState:default': {
+      fill: '#ecf3ff',
     },
     // 鼠标 hover 上节点，即 hover 状态为 true 时的样式
-    "nodeState:hover": {
-      cursor: "pointer",
+    'comboState:hover': {
+      cursor:        'pointer',
       shadowOffsetX: 0,
       shadowOffsetY: 4,
-      shadowBlur: 10,
-      opacity: 0.8,
+      shadowBlur:    10,
+      opacity:       0.8,
     },
     // 鼠标点击节点，即 selected 状态为 true 时的样式
-    "nodeState:selected": {
+    'comboState:selected': {
       // fill:   '#f9f9f9',
-      stroke: "#1890FF",
-      cursor: "default",
+      stroke: '#1890FF',
+      cursor: 'default',
+    },
+  },
+
+
+  nodeStateStyles: {
+    'nodeState:default': {
+      fill: '#ecf3ff',
+    },
+    // 鼠标 hover 上节点，即 hover 状态为 true 时的样式
+    'nodeState:hover': {
+      cursor:        'pointer',
+      // shadowOffsetX: 0,
+      // shadowOffsetY: 4,
+      // shadowBlur:    10,
+      // opacity:       0.8,
+    },
+    // 鼠标点击节点，即 selected 状态为 true 时的样式
+    'nodeState:selected': {
+      // fill:   '#f9f9f9',
+      stroke: '#1890FF',
+      cursor: 'default',
     },
   },
   // node 文本默认样式
   nodeLabelStyles: {
     style: {
-      fontSize: 12,
-      fill: "#666",
-      textAlign: "center",
-      textBaseline: "middle",
-      cursor: "default",
+      fontSize:     12,
+      fill:         '#666',
+      textAlign:    'center',
+      textBaseline: 'middle',
+      cursor:       'default',
     },
   },
   // node 文本交互样式
   nodeLabelStateStyles: {
-    "nodeLabelState:default": {},
-    "nodeLabelState:hover": {},
-    "nodeLabelState:selected": {},
-  },
+    'nodeLabelState:default': {
 
+    },
+    'nodeLabelState:hover': {
+
+    },
+    'nodeLabelState:selected': {
+
+    },
+    
+  },
+  /* node图标默认样式 */
+  iconStyles: {
+    width:  20,
+    height: 20,
+    x:      0,
+    y:      0,
+  },
   // edge默认样式
   edgeStyles: {
-    stroke: "#aab7c3",
+    stroke:          '#aab7c3',
     lineAppendWidth: 10,
-    startArrow:false,
-    endArrow:false,
-    // 箭头样式，可以自定义，这里只是一个例子，你可以根据需要进行修改。
-    // startArrow: {
-    //   path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
-    //   fill: "#aab7c3",
-    // },
-    // endArrow: {
-    //   path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
-    //   fill: "#aab7c3",
-    // },
+    startArrow:      {
+      path: 'M 0,0 L 8,4 L 7,0 L 8,-4 Z',
+      fill: '#aab7c3',
+    },
+    endArrow: {
+      path: 'M 0,0 L 8,4 L 7,0 L 8,-4 Z',
+      fill: '#aab7c3',
+    },
   },
   // edge交互样式
   edgeStateStyles: {
     // 鼠标点击边，即 selected 状态为 true 时的样式
     selected: {
-      stroke: "#aab7c3",
+      stroke: '#aab7c3',
     },
     hover: {
-      stroke: "#aab7c3",
+      stroke: '#aab7c3',
     },
   },
   anchorPointStyles: {
-    r: 4,
-    fill: "#fff",
-    stroke: "#1890FF",
+    r:         5,
+    fill:      '#fff',
+    stroke:    '#1890FF',
     lineWidth: 1,
   },
 };

@@ -1,7 +1,7 @@
 {
   "name": "topo-edit",
   "private": false,
-  "version": "0.0.23",
+  "version": "0.0.290",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
   "module": "./dist/topo-edit.es.js",
   "exports": {
     "./dist/index.css": "./dist/index.css",
+    "./dist/svg": "./dist/svg/",
     ".": {
       "import": "./dist/topo-edit.es.js",
       "require": "./dist/topo-edit.umd.js"

@@ -5,10 +5,10 @@
 
 import registerFactory from "./register-factory";
 
-export default (G6, config) => {
+export default (G6, config, vue, container = "canvasPanel") => {
   const options = Object.assign(
     {
-      container: "canvasPanel",
+      container: container,
       width: window.innerWidth,
       height: window.innerHeight,
       // renderer:       'svg',
@@ -28,16 +28,6 @@ export default (G6, config) => {
         // 允许拖拽画布、缩放画布、拖拽节点
         default: [
           "drag-canvas", // 官方内置的行为
-          // 'zoom-canvas',
-          /* {
-            type:    'click-select',
-            trigger: 'ctrl',
-        }, */
-          /* {
-            type:           'drag-node',
-            enableDelegate: true,
-        }, */
-          // 'activate-relations',
           "canvas-event", // 自定义行为
           "delete-item",
           "select-node",
@@ -50,10 +40,6 @@ export default (G6, config) => {
         type: "rect-node",
         style: {
           radius: 10,
-          lineWidth: 0,
-          fill: "",
-          lineDash: [4, 4],
-          stroke:'#1890ff'
         },
       },
       defaultEdge: {
@@ -62,38 +48,43 @@ export default (G6, config) => {
           radius: 6,
           offset: 15,
           stroke: "#aab7c3",
+          zIndex: 100,
           lineAppendWidth: 10, // 防止线太细没法点中
-          // startArrow: {
-          //   path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
-          //   fill: "#aab7c3",
-          // },
-          // endArrow: {
-          //   path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
-          //   fill: "#aab7c3",
-          //   stroke: "#aab7c3",
-          // },
+          /* startArrow:      {
+            path: 'M 0,0 L 8,4 L 7,0 L 8,-4 Z',
+            fill: '#aab7c3',
+        }, */
+          endArrow: {
+            path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
+            fill: "#aab7c3",
+            stroke: "#aab7c3",
+          },
         },
       },
       // 默认节点不同状态下的样式集合
       nodeStateStyles: {
         "nodeState:default": {
-          // fill: "#E7F7FE",
-          stroke: "#1890FF",
-          lineDash: [4, 4]
+          fill: "#ffffff",
+          opacity: 0,
+          // stroke: '#E7F7FE',
         },
         "nodeState:hover": {
-          fill: "#d5f1fd",
+          fill: "#ffffff",
         },
         "nodeState:selected": {
-          fill: "#caebf9",
-          stroke: "#1890FF",
+          fill: "#ffffff",
+          // stroke: '#1890FF',
         },
       },
       // 默认边不同状态下的样式集合
       edgeStateStyles: {
         "edgeState:default": {
-          stroke: "#aab7c3",
-          endArrow: false,
+          // stroke:   '#aab7c3',
+          endArrow: {
+            path: "M 0,0 L 8,4 L 7,0 L 8,-4 Z",
+            fill: "#aab7c3",
+            stroke: "#aab7c3",
+          },
         },
         "edgeState:selected": {
           stroke: "#1890FF",
@@ -130,7 +121,7 @@ export default (G6, config) => {
     });
 
     // 注册自定义节点/边等
-    registerFactory(G6);
+    registerFactory(G6, vue);
   } else {
     console.warn("未找到注册节点!");
   }

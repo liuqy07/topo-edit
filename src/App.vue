@@ -4,8 +4,8 @@ import graph from "./pages/graph/graph.vue";
 
 <template>
 
-  <div style = 'width:100%; height: 90vh;' @saveTopo ="saveTopo">
-    <graph />
+   <div style = 'width:100%; height: 90vh;' @saveTopo ="saveTopo">
+    <graph/>
   </div>
 
 </template>

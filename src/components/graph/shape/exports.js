@@ -1,10 +1,13 @@
 import registerBaseNode from './nodes/base-node';
+import registerBaseifitNode from './nodes/base-ifit-node';
+import registerBaseCombo from './nodes/base-combo';
 import registerNode from './node';
-import  registerCombo  from './combo/base-combo';
 
-export default (G6) => {
+export default (G6,vue) => {
   // 先注册基础节点
-  registerBaseNode(G6);
+  registerBaseNode(G6,vue);
+  registerBaseifitNode(G6,vue);
+  // 注册组合节点
+  registerBaseCombo(G6,vue);
   registerNode(G6);
-  registerCombo(G6);
 };

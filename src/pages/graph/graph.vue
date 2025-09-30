@@ -1,7 +1,7 @@
 <template>
-  <div class="root">
-    <el-button @click="clickgraph"> 123123 </el-button>
-    <item-panel class="itemPanel" :imgurl="imgurl" />
+  <div class="root" style="width: 100%; height: 100%;">
+    <el-button @click="clickgraph" v-show="false"> 123123 </el-button>
+    <item-panel class="itemPanel" :imgurl="imgurl"  v-if="isEdit"/>
     <div :id="domId" ref="canvasPanel" class="canvasPanel" @dragover.prevent />
 
     <el-drawer title="属性面板" v-model="configVisible" :direction="direction">
@@ -98,7 +98,6 @@
                 size="small"
               ></el-input>
             </div>
-          
           </el-collapse-item>
         </el-collapse>
 
@@ -176,7 +175,7 @@
 import G6 from "@antv/g6";
 import registerFactory from "../../components/graph/graph";
 import ItemPanel from "./ItemPanel.vue";
-import data from "./data";
+import topoData from "./data";
 // import data from "./data.js";
 import { imglistAll as imglistAll1, imgurl } from "../static/static";
 import { reactive, toRaw } from "vue";
@@ -184,6 +183,12 @@ import { reactive, toRaw } from "vue";
 export default {
   name: "graphVue",
   props: {
+    isEdit: {
+      type: Boolean,
+      default: ()=>{
+        return false
+      }
+    },
     imgurl: {
       type: Array,
       default: () => {
@@ -196,12 +201,19 @@ export default {
         return "canvasPanel";
       },
     },
+    width: {
+      type: String,
+    },
+    height: {
+       type: String,
+    }
   },
   components: {
     ItemPanel,
   },
   data() {
     return {
+      // isEdit: true,
       imglistAll1: imglistAll1,
       dropCombo: false,
       graph: {},
@@ -357,7 +369,9 @@ export default {
   methods: {
     clickgraph() {
       let graphdata = this.graph.save();
-      this.$emit("saveTopo",graphdata)
+      this.$emit("saveTopo", graphdata);
+      console.log("graphdata", graphdata);
+      
       // console.log("S", graphdata, this.graph.getNodes());
     },
     getImageUrl(name) {
@@ -412,51 +426,54 @@ export default {
           stroke: "#c2c8cc",
         },
       });
-      const cfg = registerFactory(G6, {
-        width: this.$refs.canvasPanel.innerwidth,
-        height: this.$refs.canvasPanel.innerHeight,
-        groupByTypes: true,
-        // renderer: 'svg',
-        layout: {
-          type: "", // 位置将固定
+      const cfg = registerFactory(
+        G6,
+        {
+          width: this.$refs.canvasPanel.innerwidth,
+          height: this.$refs.canvasPanel.innerHeight,
+          groupByTypes: true,
+          // renderer: 'svg',
+          layout: {
+            type: "", // 位置将固定
+          },
+          defaultCombo: {
+            type: "base-combo-rect",
+          },
+          modes: {
+            // 支持的 behavior
+            default: [
+              "drag-shadow-node",
+              "canvas-event",
+              "drag-canvas",
+              "delete-item",
+              "hover-node",
+              "hover-combo",
+              "drag-canvas",
+              "drag-node",
+              "drag-combo",
+              "collapse-expand-combo",
+            ],
+            originDrag: [
+              {
+                type: "canvas-event",
+                enableDrop: true,
+              },
+              "drag-shadow-node",
+              "drag-node",
+              "canvas-event",
+              "delete-item",
+              "hover-node",
+              "drag-combo",
+              // "select-combo",
+            ],
+          },
+          plugins: this.isEdit? [menu, minimap, grid] : [menu, minimap],
+          // ... 其他G6原生入参
         },
-        defaultCombo: {
-          type: "base-combo-rect",
-        },
-
-        modes: {
-          // 支持的 behavior
-          default: [
-            "drag-shadow-node",
-            "canvas-event",
-            "drag-canvas",
-            "delete-item",
-            "hover-node",
-            "hover-combo",
-            "drag-canvas",
-            "drag-node",
-            "drag-combo",
-            "collapse-expand-combo",
-          ],
-          originDrag: [
-            {
-              type: "canvas-event",
-              enableDrop: true,
-            },
-            "drag-shadow-node",
-            "drag-node",
-            "canvas-event",
-            "delete-item",
-            "hover-node",
-            "drag-combo",
-            // "select-combo",
-          ],
-        },
-        plugins: [menu, minimap, grid],
-        // ... 其他G6原生入参
-      });
+        this
+      );
       this.graph = new G6.Graph(cfg);
-      this.graph.read(data); // 读取数据
+      this.graph.read(topoData); // 读取数据
     },
 
     isOutsideCombo(point, combo) {
@@ -534,47 +551,6 @@ export default {
         });
       });
 
-      // this.graph.on("after-node-selected", (e) => {
-      //   this.configVisible = !!e;
-      //   if (e && e.item) {
-      //     let modelcfg = {
-      //       labelCfg: {
-      //         fontSize: "12px",
-      //         style: {
-      //           fill: "",
-      //         },
-      //       },
-      //     };
-      //     let model = e.item.get("model");
-      //     model = { ...modelcfg, ...model };
-      //     this.config = model;
-      //     this.label = model.label;
-      //     this.labelCfg = {
-      //       fontSize: model.labelCfg.fontSize,
-      //       style: {
-      //         fill: model.labelCfg.style.fill,
-      //       },
-      //     };
-      //     this.node = {
-      //       fill: model.style.fill,
-      //       borderColor: model.style.stroke,
-      //       lineDash: model.style.lineDash || "none",
-      //       width: model.style.width,
-      //       height: model.style.height,
-      //       shape: model.type,
-      //     };
-      //   }
-      // });
-
-      // this.graph.on("on-node-mouseenter", (e) => {
-      //   if (e && e.item) {
-      //     e.item.getOutEdges().forEach((edge) => {
-      //       edge.clearStates("edgeState");
-      //       edge.setState("edgeState", "hover");
-      //     });
-      //   }
-      // });
-
       // 鼠标拖拽到画布外时特殊处理
       this.graph.on("mousedown", () => {
         this.isMouseDown = true;
@@ -583,7 +559,7 @@ export default {
       this.graph.on("mouseup", () => {
         this.isMouseDown = false;
       });
-      
+
       this.graph.on("canvas:mouseleave", () => {
         this.graph.getNodes().forEach((x) => {
           const group = x.getContainer();
@@ -681,8 +657,6 @@ export default {
           }, 100);
         }
       );
-
-
     },
 
     deleteNode(item) {
@@ -811,14 +785,15 @@ export default {
         label,
         shape = "img-node",
         // fill,
-        width = 100,
-        height = 100,
+        width = 200,
+        height = 200,
       } = JSON.parse(transferData);
+
       let model = {
         id: this.guid(),
         type: shape,
         // padding: [10, 10],
-        size: [width, height],
+        size: [width === null ? 100 : width, height === null ? 100 : height],
         width: width,
         height: height,
         stroke: "#999",
@@ -849,33 +824,34 @@ export default {
       comboNode.shape = "img-node";
       comboNode.label = " ";
 
-      const modelNode = {
-        id: this.guid(),
-        comboId: combo.get("id"),
-        level: "OLT",
-        label: " ",
-        labelCfg: toRaw(this.labelCfg),
-        //   counts: [12, 11], //一般问题 和严重问题的数量
-        width: 40,
-        height: 40,
-        type: "img-node",
-        img: "olt_1.png",
-        style: {
-          fill: "",
-          width: 40,
-          height: 40,
-        },
-        // 坐标
-        x,
-        y,
-      };
-
+      // const modelNode = {
+      //   id: this.guid(),
+      //   comboId: combo.get("id"),
+      //   level: "OLT",
+      //   label: " ",
+      //   labelCfg: toRaw(this.labelCfg),
+      //   width: 40,
+      //   height: 40,
+      //   type: "img-node",
+      //   img: "olt_1.png",
+      //   style: {
+      //     fill: "",
+      //     width: 40,
+      //     height: 40,
+      //   },
+      //   // 坐标
+      //   x,
+      //   y,
+      // };
       //  this.addimgNode(JSON.stringify(comboNode), { x, y }, combo1);
-      this.graph.addItem("node", modelNode);
+      // this.graph.addItem("node", modelNode);
       this.$nextTick(() => {
-        this.graph.refreshItem(combo);
         this.graph.updateCombo(combo1);
+        setTimeout(() => {
+          combo1.setState("anchorShow", false);
+        }, 100);
       });
+
       //刷新拖入的当前分组容器
     },
 
@@ -898,6 +874,7 @@ export default {
   display: flex;
   position: relative;
   width: 100%;
+  min-width: 1200px;
   height: 100%; //calc(100vh - 50px);
   .itemPanel {
     flex-basis: 300px;

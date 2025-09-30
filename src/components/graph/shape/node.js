@@ -4,6 +4,7 @@
  * @param {string} icon 图片 url
  * @param {string} labelCfg 文本节点样式
  */
+// import { decomposeMatrix } from "@antv/x6/lib/util/dom/matrix";
 import defaultStyles from "./defaultStyles";
 
 const { iconStyles, nodeStyles, anchorPointStyles, nodeLabelStyles } =
@@ -43,11 +44,114 @@ function getStyle(options, cfg) {
 }
 
 export default (G6) => {
+    // 从 base-node 中扩展方形节点
+    G6.registerNode(
+      "img-ifit",
+      {
+        shapeType: "circle",
+        // 当前节点的样式集合
+        getShapeStyle(cfg) {
+          let circel_r = cfg.width>= cfg.height? cfg.width:cfg.height
+          const r = circel_r/2 + 2 || 20;
+          return getStyle.call(
+            this,
+            {
+              r, // 半径
+          // 将图形中心坐标移动到图形中心, 用于方便鼠标位置计算
+          x: 0,
+          y: 0,
+            },
+            cfg
+          );
+        },
+      },
+      "base-node-ifit"
+    );
+
+  // 注册父元素的节点类型
+  G6.registerNode(
+    "img-ifit1",
+    {
+      shapeType: "rect",
+      // 当前节点的样式集合
+      getShapeStyle(cfg) {
+        const width = cfg.style.width || 40;
+        const height = cfg.style.height || 40;
+        // decomposeMatrix
+        return getStyle.call(
+          this,
+          {
+            width,
+            height,
+            radius:20,
+            // 将图形中心坐标移动到图形中心, 用于方便鼠标位置计算
+            x: -width / 2,
+            y: -height / 2,
+          },
+          cfg
+        );
+      },
+    },
+    "base-node-ifit"
+  );
+
+
+
+  // 注册父元素的节点类型
+  G6.registerNode(
+    "img-cloud",
+    {
+      shapeType: "rect",
+      // 当前节点的样式集合
+      getShapeStyle(cfg) {
+        const width = cfg.style.width || 80;
+        const height = cfg.style.height || 40;
+        return getStyle.call(
+          this,
+          {
+            width,
+            height,
+            radius:20,
+            // 将图形中心坐标移动到图形中心, 用于方便鼠标位置计算
+            x: -width / 2,
+            y: -height / 2,
+          },
+          cfg
+        );
+      },
+    },
+    "base-node"
+  );
+
   // 从 base-node 中扩展方形节点
   G6.registerNode(
     "img-node",
     {
-      shapeType: "rect",
+      shapeType: "circle",
+      // 当前节点的样式集合
+      getShapeStyle(cfg) {
+        let circel_r = cfg.width>= cfg.height? cfg.width:cfg.height
+        const r = circel_r/2 + 2 || 20;
+        return getStyle.call(
+          this,
+          {
+            r, // 半径
+        // 将图形中心坐标移动到图形中心, 用于方便鼠标位置计算
+        x: 0,
+        y: 0,
+          },
+          cfg
+        );
+      },
+    },
+    "base-node"
+  );
+
+  // 从 base-node 中扩展方形节点
+  G6.registerNode(
+    "rect-node",
+    {
+      shapeType: "circle",
       // 当前节点的样式集合
       getShapeStyle(cfg) {
         const width = cfg.style.width || 80;
