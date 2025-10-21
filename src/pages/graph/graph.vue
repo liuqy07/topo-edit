@@ -186,7 +186,7 @@ export default {
     isEdit: {
       type: Boolean,
       default: ()=>{
-        return false
+        return true
       }
     },
     imgurl: {
@@ -641,8 +641,8 @@ export default {
               id: `${+new Date() + (Math.random() * 10000).toFixed(0)}`, // edge id
               source: source.get("id"),
               target: target.get("id"),
-              sourceAnchor,
-              targetAnchor,
+              // sourceAnchor,
+              // targetAnchor,
               label: "",
               labelCfg: {
                 style: {
@@ -874,7 +874,6 @@ export default {
   display: flex;
   position: relative;
   width: 100%;
-  min-width: 1200px;
   height: 100%; //calc(100vh - 50px);
   .itemPanel {
     flex-basis: 300px;
